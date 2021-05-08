@@ -1,5 +1,6 @@
 import express from 'express';
 
+// Routing
 const app = express();
 
 app.get('/', (req, res) => {
