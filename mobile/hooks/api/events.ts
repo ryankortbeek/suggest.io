@@ -34,11 +34,12 @@ export const getMatchedEvents = (
 };
 
 export const postMatch = (
-  id: number,
+  userId: number,
+  eventId: number,
   isMatch: boolean
 ): Promise<AxiosResponse> => {
-  return axios.post(POST_MATCH, {
-    id,
+  return axios.post(POST_MATCH + '/' + userId, {
+    eventId,
     isMatch,
   });
 };
