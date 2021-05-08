@@ -19,28 +19,28 @@ type Props = {
 };
 
 export const Login: FC<Props> = ({ route, navigation }) => {
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [vPassword, setVPassword] = useState<string>('');
-  const [name, setName] = useState<string>('');
-  const [isCreate, setIsCreate] = useState<boolean>(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [vPassword, setVPassword] = useState('');
+  const [name, setName] = useState('');
+  const [isCreate, setIsCreate] = useState(false);
 
-  const onChangeUsername = (username: string): void => {
+  const onChangeUsername = (username: string) => {
     setUsername(username);
   };
 
-  const onChangePassword = (password: string): void => {
+  const onChangePassword = (password: string) => {
     setPassword(password);
   };
 
-  const onChangeName = (name: string): void => {
+  const onChangeName = (name: string) => {
     setName(name);
   };
 
-  const onChangeVPassword = (password: string): void => {
+  const onChangeVPassword = (password: string) => {
     setVPassword(password);
   };
-  const changeSignUp = (): void => {
+  const changeSignUp = () => {
     setUsername('');
     setPassword('');
     setIsCreate(true);
