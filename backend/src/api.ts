@@ -13,12 +13,11 @@ export interface IEventResponse {
 }
 
 // e.g.getEvents("53.53216861500475", "-113.57363822706881", "40000")
-// need to post in api key in auth header like "Bearer <key>"
 export function getEvents(latitude: string, longitude: string, radius: string) {
 
     const res = axios.get(`https://api.yelp.com/v3/events?latitude=${latitude}&longitude=${longitude}&radius=${radius}&limit=50`, {
         headers: {
-          "Authorization": "Bearer "
+          "Authorization": "Bearer 1ivgB27DrOOF9NbyWW95E1w3eWxw1MD21uhjZaxI1jPXWaEn-m06uNVdvXVecLc9nt663pSNIdiHIyGYi-UMqBiIw0o_BPhTy50GUYhBMmWyfRNXnOYZurdy7LOWYHYx"
         }
       })
       .then((response) => {
@@ -26,7 +25,6 @@ export function getEvents(latitude: string, longitude: string, radius: string) {
           id: new Date().getTime(),
           events: response.data.events.map(({id, name, image_url, description}: IEvent)=>({id, name, image_url, description}))
         };
-        console.log(results);
         return results;
       });
       return res;

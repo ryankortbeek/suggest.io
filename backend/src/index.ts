@@ -19,7 +19,9 @@ app.get('/', (_, res) => {
 
 app.get('/events', (req, res) => {
     console.log('getting events');
-    res.json(getEvents());
+    getEvents("53.53216861500475", "-113.57363822706881", "40000").then((val) => {
+        res.json(val)
+    })
 })
 
 app.get('/matched_events/:userId', (req, res) => {
