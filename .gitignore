@@ -1,1 +1,6 @@
+backend/vanilla
 node_modules/
+.expo/
+.expo-shared/
+windows/
+metro.config.js
