@@ -38,7 +38,8 @@ export const postMatch = (
   eventId: number,
   isMatch: boolean
 ): Promise<AxiosResponse> => {
-  return axios.post(POST_MATCH + '/' + userId, {
+  return axios.post(POST_MATCH, {
+    userId,
     eventId,
     isMatch,
   });
