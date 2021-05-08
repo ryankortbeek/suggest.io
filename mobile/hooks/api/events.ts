@@ -5,6 +5,12 @@ const GET_ALL_EVENTS = BASE_URL + '/events';
 const POST_MATCH = BASE_URL + '/match';
 const GET_MATCHED_EVENTS = BASE_URL + '/matched_events';
 
+export const NONE = 'none';
+export const FETCH_ERROR = 'fetch_error';
+export const POST_ERROR = 'post_error';
+
+export type EventError = typeof NONE | typeof FETCH_ERROR | typeof POST_ERROR;
+
 export interface IEvent {
   id: number;
   name: string;
@@ -28,11 +34,13 @@ export const getMatchedEvents = (
 };
 
 export const postMatch = (
-  id: number,
+  userId: number,
+  eventId: number,
   isMatch: boolean
 ): Promise<AxiosResponse> => {
   return axios.post(POST_MATCH, {
-    id,
-    isMatch,
+    userId: userId,
+    eventId: eventId,
+    isMatch: isMatch,
   });
 };
