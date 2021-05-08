@@ -1,15 +1,20 @@
 import express from 'express';
+import { nextTick } from 'process';
 import {getEvents, getMatchedEvents} from './api';
-import {handleEventResponse} from './db_handler';
+import {handleEventResponse, checkAuth} from './db_handler';
 
 // Routing
 const app = express();
 const https = require('https');
 const fs = require('fs');
 
+app.use('/', (req, res, next) => {
+    checkAuth(req, res, next)
+})
+
 app.get('/', (_, res) => {
     console.log('Welcome to suggest.io!')
-    res.send('Welcome to suggest.io!');
+    res.json({message: 'Welcome to suggest.io!'});
 })
 
 app.get('/events', (req, res) => {
@@ -27,11 +32,20 @@ app.post('/match', (req, res) => {
     handleEventResponse(req.body.userId, req.body.eventId, req.body.isMatch);
 })
 
-var options = {
+app.post('/sign_up', (req, res) => {
+    console.log(req.body);
+    handleEventResponse(req.body.userId, req.body.eventId, req.body.isMatch);
+})
+
+const options = {
     key: fs.readFileSync('test/fixtures/keys/key.pem'),
     cert: fs.readFileSync('test/fixtures/keys/key-cert.pem')
 }
 
-https.createServer(options, app).listen(3000, () => {
+// https.createServer(options, app).listen(3000, () => {
+    // console.log('The application is listening on port 3000!');
+// })
+
+app.listen(3000, () => {
     console.log('The application is listening on port 3000!');
 })

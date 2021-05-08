@@ -9,3 +9,6 @@
 - Install dependencies with `npm i`
 - Whenever changes are made run `npm run build` (compiles ts to js)
 - To run `npm run exec` and server will listen on port 3000
+
+## Notes
+Must export appl. creditionals as an environment variable: `export GOOGLE_APPLICATION_CREDENTIALS="/home/user/Downloads/service-account-file.json"`
