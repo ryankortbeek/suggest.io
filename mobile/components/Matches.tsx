@@ -15,6 +15,6 @@ type Props = {
 
 export const Matches: FC<Props> = ({route, navigation}) => {
     return (
-        <view> THIS IS MATCHES </view>
+        <View> THIS IS MATCHES </View>
     )
 }

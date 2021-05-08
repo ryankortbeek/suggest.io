@@ -16,6 +16,6 @@ type Props = {
 
 export const Login: FC<Props> = ({route, navigation}) => {
     return (
-        <view> THIS IS LOGIN </view>
+        <View> THIS IS LOGIN </View>
     )
 }

@@ -19,23 +19,13 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-    <View style={styles.container}>
       <NavigationContainer>
-      <Stack.Navigator  initialRouteName="Login">
-        <Stack.Screen name="Main" component={Main} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Matches" component={Matches} />
-      </Stack.Navigator>
-    </NavigationContainer>
-    </View>
+        <Stack.Navigator  initialRouteName="Login">
+          <Stack.Screen name="Main" component={Main} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Matches" component={Matches} />
+        </Stack.Navigator>
+      </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
