@@ -1,8 +1,17 @@
 import { useState, useEffect } from 'react';
-import { getAllEvents, postMatch, IEvent } from './api/events';
+import {
+  getAllEvents,
+  postMatch,
+  IEvent,
+  EventError,
+  FETCH_ERROR,
+  NONE,
+  POST_ERROR,
+} from './api/events';
 
 export interface IEventData {
   events: IEvent[];
+  error: EventError;
   handleSwipe: (isMatch: boolean) => void;
 }
 
@@ -12,6 +21,7 @@ export interface IEventData {
 // - handle if backend has no more events to show!!
 export const useEvents = (): IEventData => {
   const [events, setEvents] = useState(new Array<IEvent>());
+  const [error, setError] = useState<EventError>(NONE);
 
   useEffect(() => {
     if (events.length === 0) {
@@ -20,7 +30,7 @@ export const useEvents = (): IEventData => {
           setEvents(resp.data.events);
         })
         .catch((_err) => {
-          // TODO: do some UI response
+          setError(FETCH_ERROR);
           console.log('something went wrong :(');
         });
     }
@@ -33,9 +43,9 @@ export const useEvents = (): IEventData => {
         events.pop();
       })
       .catch((_) => {
-        // TODO: do some UI response
+        setError(POST_ERROR);
         console.log('something went wrong :(');
       });
   };
-  return { events, handleSwipe };
+  return { events, error, handleSwipe };
 };
