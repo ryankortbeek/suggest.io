@@ -5,7 +5,8 @@ exports.checkAuth = exports.handleEventResponse = void 0;
 var serviceAccount = require('../firebase-admin/service-account.json');
 var admin = require('firebase-admin');
 admin.initializeApp({
-    credential: admin.credential.applicationDefault(),
+    // credential: admin.credential.applicationDefault(),
+    credential: admin.credential.cert(serviceAccount),
     databaseURL: 'https://project-391038625508.firebaseio.com' // may not be needed
 });
 var db = admin.firestore();
