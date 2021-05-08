@@ -10,14 +10,10 @@ export interface EventResponse {
     events: Event[];
 }
 
-function getEvents() {
+export function getEvents() {
 
 }
 
-function getMatchedEvents(userId: string) {
-
-}
-
-function postMatch(eventId: string, isMatch: boolean) {
+export function getMatchedEvents(userId: string) {
 
 }
