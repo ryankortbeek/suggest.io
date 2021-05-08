@@ -2,3 +2,8 @@ backend/vanilla
 .vscode/launch.json
 backend/reqs.txt
 backend/src/testing.ts
+node_modules/
+.expo/
+.expo-shared/
+windows/
+metro.config.js

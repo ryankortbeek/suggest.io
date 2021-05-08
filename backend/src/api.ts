@@ -12,7 +12,7 @@ export interface IEventResponse {
     events: Event[];
 }
 
-function getEvents() {
+export function getEvents() {
 
     const res = axios.get("https://api.yelp.com/v3/events?location=edmonton&limit=50&offset=50", {
         headers: {
@@ -30,6 +30,6 @@ function getEvents() {
       return res;
   }
 
-function getMatchedEvents(userId: string) {
+export function getMatchedEvents(userId: string) {
 
 }
