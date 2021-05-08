@@ -14,6 +14,7 @@ export interface IEventData {
 
 // TODO:
 // - make GET request on mount
+// - should we remove events as we scroll?
 export const useMatches = (userId: number): IEventData => {
   const [events, setEvents] = useState(new Array<IEvent>());
   const [error, setError] = useState<EventError>(NONE);
