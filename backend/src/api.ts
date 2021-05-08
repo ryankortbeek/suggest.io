@@ -17,7 +17,3 @@ export function getEvents() {
 export function getMatchedEvents(userId: string) {
 
 }
-
-export function postMatch(eventId: string, isMatch: boolean) {
-
-}
