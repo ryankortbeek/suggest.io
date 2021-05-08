@@ -1,1 +1,4 @@
 backend/vanilla
+.vscode/launch.json
+backend/reqs.txt
+backend/src/testing.ts
