@@ -11,4 +11,5 @@
 - To run `npm run exec` and server will listen on port 3000
 
 ## Notes
-Must export appl. creditionals as an environment variable: `export GOOGLE_APPLICATION_CREDENTIALS="/home/user/Downloads/service-account-file.json"`
+Must export appl. and yelp creditionals as an environment variable: `export GOOGLE_APPLICATION_CREDENTIALS="/home/user/Downloads/service-account-file.json"`
+and `export YELP_APPLICATION_CREDENTIALS="/home/user/Downloads/.json"`
