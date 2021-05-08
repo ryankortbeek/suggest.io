@@ -1,4 +1,4 @@
-export interface Event {
+interface Event {
     id: number,
     name: string,
     image: string,
@@ -8,4 +8,16 @@ export interface Event {
 export interface EventResponse {
     id: number;
     events: Event[];
+}
+
+function getEvents() {
+
+}
+
+function getMatchedEvents(userId: string) {
+
+}
+
+function postMatch(eventId: string, isMatch: boolean) {
+
 }
