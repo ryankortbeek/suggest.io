@@ -6,3 +6,4 @@ node_modules/
 .expo-shared/
 windows/
 metro.config.js
+backend/lib/
