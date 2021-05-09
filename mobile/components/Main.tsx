@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
@@ -9,8 +9,8 @@ import { EmptyCard } from './EmptyCard';
 import { Event } from '../hooks/types';
 import { useEvents } from '../hooks/useEvents';
 import { FullCard } from './FullCard';
-import SvgUri from 'react-native-svg-uri';
 import { MainHeader } from './MainHeader';
+import { MainFooter } from './MainFooter';
 
 type MainScreenRouteProp = RouteProp<RootStackParamList, 'Main'>;
 
@@ -30,7 +30,8 @@ export const Main: FC<Props> = ({ route, navigation }) => {
   // );
   const [cards, setCards] = useState(new Array<Event>());
   const [shouldExpand, setExpand] = useState(false);
-  const cardDeck = useRef<any>(null); // TODO: figure out a better way to type check component
+  const [isMenuVisible, setMenuVisibility] = useState(false);
+  const cardDeckRef = useRef<any>(null); // TODO: figure out a better way to type check component
   // replace with real remote data fetching
   useEffect(() => {
     setTimeout(() => {
@@ -76,13 +77,24 @@ export const Main: FC<Props> = ({ route, navigation }) => {
     return true;
   };
 
+  const handleMatchButton = () => {
+    navigation.navigate('Matches');
+  };
+
+  const handleMenuButton = () => {
+    setMenuVisibility(true);
+  };
+
   return (
     <View style={styles.container}>
-      <MainHeader />
+      <MainHeader
+        handleMatchButton={handleMatchButton}
+        handleMenuButton={handleMenuButton}
+      />
       <View style={styles.card_deck}>
         {cards ? (
           <SwipeCards
-            ref={cardDeck}
+            ref={cardDeckRef}
             cards={cards}
             renderCard={(cardData: Event) => <EventCard cardData={cardData} />}
             keyExtractor={(cardData: Event) => String(cardData.id)}
@@ -95,36 +107,10 @@ export const Main: FC<Props> = ({ route, navigation }) => {
         )}
       </View>
 
-      <View style={styles.buttons}>
-        <TouchableOpacity
-          style={styles.button_left}
-          onPress={() => {
-            if (cardDeck.current !== null) {
-              cardDeck.current._forceLeftSwipe();
-            }
-          }}
-        >
-          <SvgUri source={require('../assets/close_black_24dp.svg')} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button_middle}
-          onPress={() => setExpand(true)}
-        >
-          <SvgUri source={require('../assets/info_black_24dp.svg')} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button_right}
-          onPress={() => {
-            if (cardDeck.current !== null) {
-              cardDeck.current._forceRightSwipe();
-            }
-          }}
-        >
-          <SvgUri
-            source={require('../assets/favorite_border_black_24dp.svg')}
-          />
-        </TouchableOpacity>
-      </View>
+      <MainFooter
+        cardDeckRef={cardDeckRef}
+        handleExpandCard={() => setExpand(true)}
+      />
 
       {shouldExpand && (
         <FullCard cardData={cards[0]} onClickHandler={() => setExpand(false)} />
