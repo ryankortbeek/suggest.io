@@ -7,9 +7,9 @@ const app = express();
 const https = require('https');
 const fs = require('fs');
 
-app.use('/', (req, res, next) => {
-    checkAuth(req, res, next)
-})
+// app.use('/', (req, res, next) => {
+//     checkAuth(req, res, next)
+// })
 
 app.get('/', (_, res) => {
     console.log('Welcome to suggest.io!');
@@ -20,7 +20,7 @@ app.get('/events/location/:latitude-:longitude-:radius', (req, res) => {
     console.log('GET events');
     console.log(req.params);
     getEvents(req.params['latitude'], req.params['longitude'], req.params['radius']).then((val) => {
-        res.json(val)
+        val == null ? res.json(`No events found for Latitude: ${req.params['latitude']}, Longitude: ${req.params['longitude']}, Radius: ${req.params['radius']}`) : res.json(val)
     })
 })
 
@@ -28,10 +28,7 @@ app.get('/matched_events/:userId', (req, res) => {
     console.log('GET matched events... ' + req.params);
     console.log(req.params);
     getMatchedEvents(req.params['userId']).then((val) => {
-        if (val == null) {
-            res.json(`No matched events for user ID: ${req.params['userId']}`)
-        }
-        res.json(val);
+        val == null ? res.json(`No matched events for user ID: ${req.params['userId']}`) : res.json(val)
     })
 })
 
