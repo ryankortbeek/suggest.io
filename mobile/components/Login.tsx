@@ -90,12 +90,10 @@ export const Login: FC<Props> = ({ route, navigation }) => {
       // 
       await auth.createUserWithEmailAndPassword(email, password)
       .then(result => {
-        return result.user?.updateProfile({displayName: name});
+          result.user?.updateProfile({displayName: name});
+          postSignUp(user?.uid);
       });
 
-      while(user?.uid == undefined) {}
-      
-      postSignUp(user?.uid);
       setIsSigningUp(false);
       setIsSignUpSuccess(true);
 
