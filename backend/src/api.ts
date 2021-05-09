@@ -78,7 +78,23 @@ export function getMatchedEvents(userId: string) {
                 // Format and return promise with results
                 const res = axios.all(eventIds.map(url => axios.get(url, {headers: {"Authorization": `Bearer ${YELP_API_KEY}`}})))
                     .then(responseArr => {
-                        const results = responseArr.map(({data})=>({data}));
+
+                        let allEvents: Array<IEvent> = [];
+                        let allData = responseArr.map(({data}) => ({data}));
+                        allData.forEach(event => {
+                            let thisEvent: IEvent = {
+                                id: event.data.id,
+                                name: event.data.name,
+                                description: event.data.description,
+                                image_url: event.data.image_url,
+                                time_start: event.data.time_start,
+                                time_end: event.data.time_end,
+                                event_site_url: event.data.event_site_url,
+                                category: event.data.category
+                            }
+                            allEvents.push(thisEvent);
+                        })
+                        let results: IEventResponse = {id: new Date().getTime(), events: extractFutureEvents(allEvents)};
                         return results;
                     }, (rej) => {
                         console.log(rej)
