@@ -1,13 +1,22 @@
 import React, { useContext, FC } from 'react';
-import { View, Text } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  StyleProp,
+  TextStyle,
+} from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
-import { TextInput, Button } from 'react-native-paper';
 import { useState, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { auth } from '../util/firebaseSetup';
 import { postSignUp } from '../hooks/api/user';
+import { baseStyles } from './style';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 type LoginScreenRouteProp = RouteProp<RootStackParamList, 'Login'>;
 
@@ -19,6 +28,26 @@ type LoginScreenNavigationProp = StackNavigationProp<
 type Props = {
   navigation: LoginScreenNavigationProp;
   route: LoginScreenRouteProp;
+};
+
+type TextFieldProps = {
+  label: string;
+  value: string;
+  onChange: (s: string) => void;
+  secureTextEntry: boolean;
+};
+const TextField: FC<TextFieldProps> = (props) => {
+  return (
+    <View style={styles.text_input_container}>
+      <Text style={styles.text_input_label}>{props.label}</Text>
+      <TextInput
+        style={styles.text_input}
+        value={props.value}
+        onChangeText={props.onChange}
+        secureTextEntry={props.secureTextEntry}
+      />
+    </View>
+  );
 };
 
 export const Login: FC<Props> = ({ route, navigation }) => {
@@ -89,16 +118,16 @@ export const Login: FC<Props> = ({ route, navigation }) => {
   // https://medium.com/geekculture/firebase-auth-with-react-and-typescript-abeebcd7940a
   const creatAccount = async () => {
     try {
-      // 
-      await auth.createUserWithEmailAndPassword(email, password)
-      .then(result => {
-          result.user?.updateProfile({displayName: name});
+      //
+      await auth
+        .createUserWithEmailAndPassword(email, password)
+        .then((result) => {
+          result.user?.updateProfile({ displayName: name });
           postSignUp(user?.uid);
-      });
+        });
 
       setIsSigningUp(false);
       setIsSignUpSuccess(true);
-
     } catch (error) {
       setError(error.message);
       setIsSigningUp(false);
@@ -112,7 +141,6 @@ export const Login: FC<Props> = ({ route, navigation }) => {
       await auth.signInWithEmailAndPassword(email, password);
       setIsLoggingIn(false);
       setIsLogInSuccess(true);
-
     } catch (error) {
       setError(error.message);
       setIsLoggingIn(false);
@@ -123,16 +151,25 @@ export const Login: FC<Props> = ({ route, navigation }) => {
   const login = () => {
     return (
       <>
-        <TextInput label='email' value={email} onChangeText={onChangeEmail} />
-        <TextInput
-          secureTextEntry={true}
+        <TextField
+          label='email'
+          value={email}
+          onChange={onChangeEmail}
+          secureTextEntry={false}
+        />
+        <TextField
           label='password'
           value={password}
-          onChangeText={onChangePassword}
+          onChange={onChangePassword}
+          secureTextEntry={true}
         />
-        <Button onPress={() => setIsLoggingIn(true)} mode='outlined'>
-          LOGIN
-        </Button>
+        <TouchableHighlight
+          style={styles.button}
+          onPress={() => setIsLoggingIn(true)}
+          disabled={vPassword != password || password == ''}
+        >
+          <Text style={styles.button_text}>Login</Text>
+        </TouchableHighlight>
         <Text>
           Don't have an account?{' '}
           <Text
@@ -149,36 +186,90 @@ export const Login: FC<Props> = ({ route, navigation }) => {
   const signup = () => {
     return (
       <>
-        <TextInput secureTextEntry={false} label='Name' value={name} onChangeText={onChangeName} />
-        <TextInput secureTextEntry={false} label='email' value={email} onChangeText={onChangeEmail} />
-        <TextInput
-          secureTextEntry={true}
+        <TextField
+          label='name'
+          secureTextEntry={false}
+          value={name}
+          onChange={onChangeName}
+        />
+        <TextField
+          label='email'
+          value={email}
+          onChange={onChangeEmail}
+          secureTextEntry={false}
+        />
+        <TextField
           label='password'
           value={password}
-          onChangeText={onChangePassword}
-        />
-        <TextInput
+          onChange={onChangePassword}
           secureTextEntry={true}
+        />
+        <TextField
           label='confirm password'
           value={vPassword}
-          onChangeText={onChangeVPassword}
-          error={vPassword != password}
+          onChange={onChangeVPassword}
+          secureTextEntry={true}
         />
-        <Button
+        <TouchableHighlight
+          style={styles.button}
           onPress={() => setIsSigningUp(true)}
-          mode='outlined'
           disabled={vPassword != password || password == ''}
         >
-          SIGN UP
-        </Button>
+          <Text style={styles.button_text}>Sign Up</Text>
+        </TouchableHighlight>
       </>
     );
   };
   return (
-    <View>
-      <Text> Suggest.io </Text>
+    <View style={styles.basic_container}>
+      <Text style={styles.main_title}>suggest.io</Text>
       {isCreate ? signup() : login()}
       <Text> {error} </Text>
     </View>
   );
+};
+
+const styles = {
+  ...baseStyles,
+  ...StyleSheet.create({
+    text_input: {
+      width: undefined,
+      height: undefined,
+      marginTop: 5,
+      marginLeft: 10,
+    },
+    text_input_container: {
+      borderRadius: 15,
+      backgroundColor: '#FFFFFF',
+      width: '70%',
+      height: 60,
+      marginBottom: 50,
+    },
+    text_input_label: {
+      marginLeft: 10,
+      marginTop: 5,
+    },
+    main_title: {
+      fontSize: 40,
+      fontFamily: 'System',
+      fontWeight: 'bold',
+      paddingBottom: 60,
+      color: '#FFFFFF',
+    },
+    button: {
+      borderRadius: 15,
+      backgroundColor: '#FFFFFF',
+      width: 150,
+      height: 50,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 20,
+    },
+    button_text: {
+      fontSize: 22,
+      fontFamily: 'System',
+      fontWeight: 'bold',
+      color: '#000000',
+    },
+  }),
 };
