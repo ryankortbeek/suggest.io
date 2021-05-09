@@ -12,16 +12,20 @@ export const EventCard: FC<Props> = ({ cardData }) => {
   return (
     <View style={styles.card}>
       <ImageBackground source={cardData.image} style={styles.image}>
-        <TouchableWithoutFeedback>
-          <Text style={styles.title}>{cardData.name}</Text>
-          <Text style={styles.body}>{cardData.description}</Text>
-        </TouchableWithoutFeedback>
+        <View style={styles.image_text}>
+          <Text style={styles.title} numberOfLines={1}>
+            {cardData.name}
+          </Text>
+          <Text style={styles.body} numberOfLines={1}>
+            {cardData.description}
+          </Text>
+        </View>
       </ImageBackground>
     </View>
   );
 };
 
-// TODO: styling
+// TODO: stylingr
 // - font + size
 // - overflow for description
 // - info button
@@ -31,16 +35,19 @@ const styles = {
     card: {
       justifyContent: 'center',
       alignItems: 'center',
+      flexDirection: 'column',
       width: 300,
       height: 600,
-      flexDirection: 'column',
     },
     image: {
       flex: 1,
       resizeMode: 'cover',
-      justifyContent: 'center',
+      justifyContent: 'flex-end',
       width: '100%',
       height: '100%',
+    },
+    image_text: {
+      margin: 20,
     },
   }),
 };
