@@ -58,6 +58,8 @@ export const Login: FC<Props> = ({ route, navigation }) => {
       signIn();
     } else if (isLogInSuccess) {
       setIsLogInSuccess(false);
+      setPassword("");
+      setEmail("");
       navigation.navigate('Main');
     } else if (isLogInFail) {
       setIsLogInFail(false);

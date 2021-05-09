@@ -12,7 +12,7 @@ import { Event } from './types';
 export interface IEventData {
   events: Event[];
   error: EventError;
-  handleSwipe: (userId: string, eventId: number, isMatch: boolean) => void;
+  handleSwipe: (userId: string | undefined, eventId: string, isMatch: boolean, category: string | undefined) => void;
 }
 
 // TODO:
@@ -20,7 +20,7 @@ export interface IEventData {
 // - make request when it's empty / triggered
 // - handle if backend has no more events to show!!
 export const useEvents = (
-  userId: string,
+  userId: string | undefined,
   lat: string,
   lon: string,
   radius: string,
@@ -37,7 +37,7 @@ export const useEvents = (
               return {
                 ...e,
                 image: {
-                  uri: e.image,
+                  uri: e.image_url,
                 },
               };
             })
@@ -51,8 +51,8 @@ export const useEvents = (
   }, [events]);
 
   // handles popping events from stack and making POST request
-  const handleSwipe = (userId: string, eventId: number, isMatch: boolean) => {
-    postMatch(userId, eventId, isMatch)
+  const handleSwipe = (userId: string | undefined, eventId: string, isMatch: boolean, category: string | undefined) => {
+    postMatch(userId, eventId, isMatch, category)
       .then((_resp) => {
         events.pop();
         setError(POST_ERROR);

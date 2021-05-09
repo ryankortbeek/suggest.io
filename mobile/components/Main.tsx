@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState, useContext } from 'react';
 import { View, Alert } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
@@ -13,6 +13,8 @@ import { MainHeader } from './MainHeader';
 import { MainFooter } from './MainFooter';
 import { baseStyles } from './style';
 import Location from 'expo-location';
+import { AuthContext } from '../context/AuthContext';
+import { auth } from '../util/firebaseSetup';
 
 const NONE = 'none';
 type MainScreenRouteProp = RouteProp<RootStackParamList, 'Main'>;
@@ -24,14 +26,14 @@ type Props = {
   route: MainScreenRouteProp;
 };
 
-
 export const Main: FC<Props> = ({ route, navigation }) => {
+  const user = useContext(AuthContext);
   const { events, error, handleSwipe } = useEvents(
-    '',
-    '27.2046',
+    user?.uid,
+    '53.5461',
     // route.params.userInfo,
-    '77.4977', // TODO: replace with lat lon of device
-    '',
+    '-113.4938', // TODO: replace with lat lon of device
+    '40000',
   );
   
   const [cards, setCards] = useState(new Array<Event>());
@@ -40,39 +42,9 @@ export const Main: FC<Props> = ({ route, navigation }) => {
   const cardDeckRef = useRef<any>(null);
   // replace with real remote data fetching
   useEffect(() => {
+    setCards(events);
     getPermission();
-    setTimeout(() => {
-      setCards([
-        {
-          id: "1",
-          name: 'Card 1',
-          image: {
-            uri:
-              'https://media.gettyimages.com/photos/cozy-restaurant-for-gathering-with-friends-picture-id1159992039?s=612x612',
-          },
-          description: 'restaurant 1 !!!',
-        },
-        {
-          id: "2",
-          name: 'Card 2',
-          image: {
-            uri:
-              'https://thumbs.dreamstime.com/b/portrait-waitress-holding-menus-serving-busy-bar-restaurant-153985284.jpg',
-          },
-          description: 'restaurant 2 !!!',
-        },
-        {
-          id: "3",
-          name: 'Card 3',
-          image: {
-            uri:
-              'https://static3.depositphotos.com/1003631/209/i/600/depositphotos_2099183-stock-photo-fine-table-setting-in-gourmet.jpg',
-          },
-          description: 'restaurant 3 !!!',
-        },
-      ]);
-    }, 1);
-  }, []);
+  }, [events]);
 
   const showAlert = () => {
     return (
@@ -95,13 +67,13 @@ export const Main: FC<Props> = ({ route, navigation }) => {
 
   const handleYup = (card: Event) => {
     // TODO: uncomment
-    // handleSwipe(route.params.userInfo, card.id, true);
+    handleSwipe(user?.uid, card.id, true, card.category);
     return true; // return false if you wish to cancel the action
   };
 
   const handleNope = (card: Event) => {
     // TODO: uncomment
-    // handleSwipe(route.params.userInfo, card.id, false);
+    handleSwipe(user?.uid, card.id, false, card.category);
     return true;
   };
 
@@ -109,8 +81,9 @@ export const Main: FC<Props> = ({ route, navigation }) => {
     navigation.navigate('Matches');
   };
 
-  const handleMenuButton = () => {
-    setMenuVisibility(true);
+  const handleMenuButton = async() => {
+    navigation.navigate('Login');
+    await auth.signOut();
   };
 
   const getPermission = async() => {

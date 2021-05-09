@@ -15,7 +15,7 @@ export interface IEvent {
   [x: string]: any;
   id: string;
   name: string;
-  image: string;
+  image_url: string;
   description: string;
   time_start?: string;
   time_end?: string;
@@ -29,30 +29,33 @@ interface IEventResponse {
 }
 
 export const getAllEvents = (
-  userId: string,
+  userId: string | undefined,
   lat: string,
   lon: string,
   radius: string
 ): Promise<AxiosResponse<IEventResponse>> => {
+  console.log(GET_ALL_EVENTS + '/' + userId + '/location/' + lat + '-' + lon + '-' + radius)
   return axios.get(
-    GET_ALL_EVENTS + '/' + userId + '/location' + lat + '-' + lon + '-' + radius
+    GET_ALL_EVENTS + '/' + userId + '/location/' + lat + '-' + lon + '-' + radius
   );
 };
 
 export const getMatchedEvents = (
-  userId: number
+  userId: string | undefined
 ): Promise<AxiosResponse<IEventResponse>> => {
   return axios.get(GET_MATCHED_EVENTS + '/' + userId);
 };
 
 export const postMatch = (
-  userId: string,
-  eventId: number,
-  isMatch: boolean
+  userId: string | undefined,
+  eventId: string,
+  isMatch: boolean,
+  category: string | undefined
 ): Promise<AxiosResponse> => {
   return axios.post(POST_MATCH, {
     userId: userId,
     eventId: eventId,
     isMatch: isMatch,
+    eventCategory: category,
   });
 };
