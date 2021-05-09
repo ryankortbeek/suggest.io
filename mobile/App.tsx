@@ -7,25 +7,32 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Main } from './components/Main';
 import { Login } from './components/Login';
 import { Matches } from './components/Matches';
-
+import { AuthProvider } from './provider/AuthProvider';
+import { MainHeader } from './components/MainHeader';
 
 export type RootStackParamList = {
-  Main: {userInfo: string};
+  Main: undefined;
   Login: undefined;
-  Matches: {userInfo: string};
+  Matches: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-      <NavigationContainer>
-        <Stack.Navigator  initialRouteName="Login">
-          <Stack.Screen name="Main" component={Main} />
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Matches" component={Matches} />
+    <NavigationContainer>
+      <AuthProvider>
+        <Stack.Navigator
+          initialRouteName='Main'
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name='Main' component={Main} />
+          <Stack.Screen name='Login' component={Login} />
+          <Stack.Screen name='Matches' component={Matches} />
         </Stack.Navigator>
-      </NavigationContainer>
+      </AuthProvider>
+    </NavigationContainer>
   );
 }
-

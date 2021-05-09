@@ -23,8 +23,18 @@ interface IEventResponse {
   events: IEvent[];
 }
 
-export const getAllEvents = (): Promise<AxiosResponse<IEventResponse>> => {
-  return axios.get(GET_ALL_EVENTS);
+export const getAllEvents = (
+  userId: string,
+  lat: string,
+  lon: string
+): Promise<AxiosResponse<IEventResponse>> => {
+  return axios.get(GET_ALL_EVENTS, {
+    params: {
+      userId: userId,
+      lat: lat,
+      lon: lon,
+    },
+  });
 };
 
 export const getMatchedEvents = (
@@ -34,7 +44,7 @@ export const getMatchedEvents = (
 };
 
 export const postMatch = (
-  userId: number,
+  userId: string,
   eventId: number,
   isMatch: boolean
 ): Promise<AxiosResponse> => {

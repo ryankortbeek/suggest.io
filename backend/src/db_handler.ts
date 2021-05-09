@@ -41,11 +41,12 @@ export async function handleEventResponse(userId: string, eventId: string, match
             events.push(eventId);
             userData['non-matched-events'] = events;
         }
-        await userRef.set(userData);
         console.log('Updated user data:');
         console.log(userData);
+        return await userRef.set(userData);
     } else {
         console.log('User does not exist');
+        return null
     }
 }
 
@@ -71,4 +72,13 @@ export async function getMatchedEventIds(userId: string) {
     }
     console.log('User does not exist');
     return null;
+}
+
+export async function signUpUser(userId: string) {
+    const res = await db.collection('users').doc(userId).set({
+        'matched-events': [],
+        'non-matched-events': []
+    });
+    console.log(res);
+    return res;
 }
