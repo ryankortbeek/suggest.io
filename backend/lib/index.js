@@ -47,6 +47,6 @@ app.post('/sign-up', function (req, res) {
 // https.createServer(options, app).listen(3000, () => {
 //     console.log('The application is listening on port 3000!');
 // })
-app.listen(3000, function () {
+app.listen(19002, function () {
     console.log('The application is listening on port 3000!');
 });

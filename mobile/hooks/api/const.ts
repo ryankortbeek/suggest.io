@@ -1,1 +1,1 @@
-export const BASE_URL = 'base_url'; // TODO: update to actual base URL
+export const BASE_URL = 'http://localhost:19000/'; // TODO: update to actual base URL
