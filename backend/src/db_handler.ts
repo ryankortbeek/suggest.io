@@ -1,6 +1,8 @@
 import {Request, Response, NextFunction} from 'express';
 
-const DEFAULT_WEIGHTING: number = 51;
+const DEFAULT_WEIGHTING: number = 61;
+const MIN_WEIGHT: number = 11;
+const MAX_WEIGHT: number = 111;
 const DELTA: number = 10;
 
 // DB stuff
@@ -43,8 +45,11 @@ export async function handleEventResponse(userId: string, eventId: string, match
         if (category != null) {
             let category_weights = userData['category-weights'];
             let delta = (match) ? DELTA : -DELTA;
-            if (match) {category_weights[category] += DELTA}
-            else if (category_weights[category_weights] >= 11) {category_weights[category] -= DELTA}
+            if (match) {
+                if (category_weights[category] <= MAX_WEIGHT - DELTA) {category_weights[category] += DELTA}
+            } else {
+                if (category_weights[category_weights] >= MIN_WEIGHT + DELTA) {category_weights[category] -= DELTA}
+            }
         }
         console.log('Updated user data:');
         console.log(userData);
@@ -101,4 +106,18 @@ export async function signUpUser(userId: string) {
     });
     console.log(res);
     return res;
+}
+
+export async function getCategoryWeightings(userId: string) {
+    const userRef = db.collection('users').doc(userId);
+    let doc = await userRef.get();
+    if (doc.exists) {
+        let userData = doc.data();
+        console.log('Retreived category weightings:');
+        console.log(userData);
+        console.log(`For user: ${userId}`);
+        return userData['category-weightings'];
+    }
+    console.log('User does not exist');
+    return null;
 }

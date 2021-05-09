@@ -16,10 +16,10 @@ app.get('/', (_, res) => {
     res.status(200).json({message: 'Welcome to suggest.io!'});
 })
 
-app.get('/events/location/:latitude-:longitude-:radius', (req, res) => {
+app.get('/events/user/:userId/location/:latitude-:longitude-:radius', (req, res) => {
     console.log('GET events');
     console.log(req.params);
-    getEvents(req.params['latitude'], req.params['longitude'], req.params['radius'])
+    getEvents(req.params['userId'], req.params['latitude'], req.params['longitude'], req.params['radius'])
         .then((val) => {
             console.log('No events found for specified parameters...')
             console.log(val);
@@ -34,7 +34,7 @@ app.get('/events/location/:latitude-:longitude-:radius', (req, res) => {
         });
 })
 
-app.get('/matched_events/:userId', (req, res) => {
+app.get('/matched-events/user/:userId', (req, res) => {
     console.log('GET matched events... ' + req.params);
     console.log(req.params);
     getMatchedEvents(req.params['userId'])

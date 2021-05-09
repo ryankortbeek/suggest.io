@@ -29,7 +29,7 @@ const YELP_API_KEY = "1ivgB27DrOOF9NbyWW95E1w3eWxw1MD21uhjZaxI1jPXWaEn-m06uNVdvX
  *   })
  *   .catch((e) => {// handle error here})
  */
-export function getEvents(latitude: string, longitude: string, radius: string) {
+export function getEvents(userId: string, latitude: string, longitude: string, radius: string) {
     const res = axios.get(
         `https://api.yelp.com/v3/events?latitude=${latitude}&longitude=${longitude}&radius=${radius}&limit=50`, 
         {headers: {"Authorization": `Bearer ${YELP_API_KEY}`}}
@@ -114,4 +114,21 @@ function extractFutureEvents(events: Array<IEvent>) {
         }
     });
     return futureEvents;
+}
+
+function orderEvents(events: Array<IEvent>, category_weights: Map<string, number>) {
+    // finds available categories
+    let categories = new Map<string, number>();
+    events.forEach((val, ind, arr) => {
+        if (val.category != null) {
+            if (categories.has(val.category)) {
+                let curr = categories.get(val.category);
+                if (curr != null) {categories.set(val.category, curr + 1)}
+            } else {
+                categories.set(val.category, 1);
+            }
+        }
+    });
+    // weighted sample over those categories
+    // order accordingly
 }
