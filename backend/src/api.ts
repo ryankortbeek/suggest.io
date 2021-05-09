@@ -1,5 +1,4 @@
 import axios, {AxiosResponse} from 'axios';
-import { time } from 'console';
 import {getMatchedEventIds} from './db_handler';
 
 interface IEvent {
