@@ -1,5 +1,5 @@
-import axios, { AxiosResponse } from 'axios';
-import { getMatchedEventIds } from './db_handler';
+import axios, {AxiosResponse} from 'axios';
+import {getMatchedEventIds} from './db_handler';
 
 interface IEvent {
     id: string,
@@ -85,4 +85,21 @@ export function getMatchedEvents(userId: string) {
   .catch((e) => console.log(e)).finally(() => {return null});
   
   return eventsArr; 
+}
+
+import {getUTCSeconds, getUTCMinutes, getUTCHour, getUTCDate, getUTCMonth, getUTCFullYear} from 'date';
+
+
+function extractFutureEvents(events: Array<IEvent>) {
+    let futureEvents: Array<IEvent>;
+    let now: Date = new Date();
+    let year = Date().getUTCSeconds();
+    let day = getDate()
+    events.forEach((val, i, arr) => {
+        if (val.time_end != null) {
+            
+        } else {
+            let e_year
+        }
+    });
 }
