@@ -1,5 +1,10 @@
 import {Request, Response, NextFunction} from 'express';
 
+export const DEFAULT_WEIGHTING: number = 61;
+export const MIN_WEIGHT: number = 11;
+const MAX_WEIGHT: number = 111;
+const DELTA: number = 10;
+
 // DB stuff
 const serviceAccount = require('../firebase-admin/service-account.json');
 
@@ -26,27 +31,32 @@ export function checkAuth(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-export async function handleEventResponse(userId: string, eventId: string, match: boolean) {
+export async function handleEventResponse(userId: string, eventId: string, match: boolean, category?: string) {
     const userRef = db.collection('users').doc(userId);
     let doc = await userRef.get();
     if (doc.exists) {
         let userData = doc.data();
-        let events: Array<string>;
-        if (match) {
-            events = userData['matched-events'];
-            events.push(eventId);
-            userData['matched-events'] = events;
-        } else {
-            events = userData['non-matched-events'];
-            events.push(eventId);
-            userData['non-matched-events'] = events;
+        let match_status_key = (match) ? 'matched-events' : 'non-matched-events';
+        // Updates events
+        let events: Array<string> = userData[match_status_key];
+        events.push(eventId);
+        userData[match_status_key] = events;
+        // Updates weights if a category is specified
+        if (category != null) {
+            let category_weights = userData['category-weights'];
+            let delta = (match) ? DELTA : -DELTA;
+            if (match) {
+                if (category_weights[category] <= MAX_WEIGHT - DELTA) {category_weights[category] += DELTA}
+            } else {
+                if (category_weights[category_weights] >= MIN_WEIGHT + DELTA) {category_weights[category] -= DELTA}
+            }
         }
         console.log('Updated user data:');
         console.log(userData);
         return await userRef.set(userData);
     } else {
-        console.log('User does not exist');
-        return null
+        console.log(`userId: ${userId} does not exist`);
+        return null;
     }
 }
 
@@ -75,10 +85,40 @@ export async function getMatchedEventIds(userId: string) {
 }
 
 export async function signUpUser(userId: string) {
+    console.log(userId);
     const res = await db.collection('users').doc(userId).set({
         'matched-events': [],
-        'non-matched-events': []
+        'non-matched-events': [],
+        'category-weightings': {
+            'music': DEFAULT_WEIGHTING,
+            'visual-arts': DEFAULT_WEIGHTING,
+            'performing-arts': DEFAULT_WEIGHTING,
+            'film': DEFAULT_WEIGHTING,
+            'lectures-books': DEFAULT_WEIGHTING,
+            'fashion': DEFAULT_WEIGHTING,
+            'food-and-drink': DEFAULT_WEIGHTING,
+            'festivals-fairs': DEFAULT_WEIGHTING,
+            'charities': DEFAULT_WEIGHTING,
+            'sports-active-life': DEFAULT_WEIGHTING,
+            'nightlife': DEFAULT_WEIGHTING,
+            'kids-family': DEFAULT_WEIGHTING,
+            'other': DEFAULT_WEIGHTING
+        }
     });
     console.log(res);
     return res;
+}
+
+export async function getCategoryWeightings(userId: string) {
+    const userRef = db.collection('users').doc(userId);
+    let doc = await userRef.get();
+    if (doc.exists) {
+        let userData = doc.data();
+        console.log('Retreived category weightings:');
+        console.log(userData);
+        console.log(`For user: ${userId}`);
+        return userData['category-weightings'];
+    }
+    console.log('User does not exist');
+    return null;
 }
