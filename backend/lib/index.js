@@ -34,9 +34,10 @@ app.post('/match', function (req, res) {
     console.log(req.body);
     db_handler_1.handleEventResponse(req.body.userId, req.body.eventId, req.body.isMatch);
 });
-app.get('/user/:userId', function (req, res) {
-    console.log('matched event ids');
-    db_handler_1.getMatchedEventIds(req.params['userId']).then(function (val) { console.log(val); }, function (rej) { console.log(rej); }).catch(function (e) { return console.log(e); });
+app.post('/sign-up', function (req, res) {
+    console.log('POST sign up');
+    console.log(req.body);
+    db_handler_1.signUpUser(req.body.userId).then(function (val) { console.log(val); }, function (rej) { console.log(rej); }).catch(function (e) { console.log(e); });
 });
 // HTTPS stuff
 // const options = {
