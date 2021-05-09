@@ -36,8 +36,10 @@ const styles = {
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'column',
-      width: 300,
+      width: 350,
       height: 600,
+      borderRadius: 15,
+      overflow: 'hidden',
     },
     image: {
       flex: 1,

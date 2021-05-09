@@ -102,6 +102,8 @@ export const Main: FC<Props> = ({ route, navigation }) => {
             renderNoMoreCards={() => <EmptyCard text='No more cards...' />}
             handleYup={handleYup}
             handleNope={handleNope}
+            yupText={'Yes'}
+            nopeText={'No'}
           />
         ) : (
           <EmptyCard text='No more cards...' />
