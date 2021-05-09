@@ -24,7 +24,7 @@ export const MainHeader: FC<Props> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1073AA',
     alignItems: 'center',
     flexDirection: 'row',
     height: 100,
