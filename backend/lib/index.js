@@ -18,18 +18,25 @@ app.get('/', function (_, res) {
     res.json({ message: 'Welcome to suggest.io!' });
 });
 app.get('/events/location/:latitude-:longitude-:radius', function (req, res) {
-    console.log("Getting events at...\nlon: " + req.params['latitude'] + "\nlat: " + req.params['longitude'] + "\nradius: " + req.params['radius']);
+    console.log('GET events');
+    console.log(req.params);
     api_1.getEvents(req.params['latitude'], req.params['longitude'], req.params['radius']).then(function (val) {
         res.json(val);
     });
 });
-app.get('/matched_events/user/:userId', function (req, res) {
-    console.log("Getting matched events... " + req.params['userId']);
+app.get('/matched-events/user/:userId', function (req, res) {
+    console.log('GET matched events');
+    console.log(req.params);
     res.json(api_1.getMatchedEvents(req.params['userId']));
 });
 app.post('/match', function (req, res) {
+    console.log('POST match');
     console.log(req.body);
     db_handler_1.handleEventResponse(req.body.userId, req.body.eventId, req.body.isMatch);
+});
+app.get('/user/:userId', function (req, res) {
+    console.log('matched event ids');
+    db_handler_1.getMatchedEventIds(req.params['userId']).then(function (val) { console.log(val); }, function (rej) { console.log(rej); }).catch(function (e) { return console.log(e); });
 });
 // HTTPS stuff
 // const options = {

@@ -62,33 +62,35 @@ function checkAuth(req, res, next) {
 exports.checkAuth = checkAuth;
 function handleEventResponse(userId, eventId, match) {
     return __awaiter(this, void 0, void 0, function () {
-        var userData, data, events;
+        var userRef, doc, userData, events;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    userData = db.collections('users').doc(userId);
-                    return [4 /*yield*/, userData.get()];
+                    userRef = db.collection('users').doc(userId);
+                    return [4 /*yield*/, userRef.get()];
                 case 1:
-                    data = _a.sent();
-                    if (!!data.exists) return [3 /*break*/, 2];
-                    console.log('User does not exist');
-                    return [3 /*break*/, 4];
-                case 2:
+                    doc = _a.sent();
+                    if (!doc.exists) return [3 /*break*/, 3];
+                    userData = doc.data();
                     events = void 0;
                     if (match) {
-                        events = data['matched-events'];
+                        events = userData['matched-events'];
                         events.push(eventId);
-                        data['matched-events'] = events;
+                        userData['matched-events'] = events;
                     }
                     else {
-                        events = data['non-matched-events'];
+                        events = userData['non-matched-events'];
                         events.push(eventId);
-                        data['non-matched-events'] = events;
+                        userData['non-matched-events'] = events;
                     }
-                    return [4 /*yield*/, userData.set(data)];
-                case 3:
+                    return [4 /*yield*/, userRef.set(userData)];
+                case 2:
                     _a.sent();
-                    console.log("Updated user data: " + data);
+                    console.log('Updated user data:');
+                    console.log(userData);
+                    return [3 /*break*/, 4];
+                case 3:
+                    console.log('User does not exist');
                     _a.label = 4;
                 case 4: return [2 /*return*/];
             }
@@ -96,19 +98,32 @@ function handleEventResponse(userId, eventId, match) {
     });
 }
 exports.handleEventResponse = handleEventResponse;
+/**
+ * Need to call this as seen below...
+ * getMatchedEventIds(userId)
+ *     .then((value) => {
+ *          // handle return value here
+ *     }, (reject) => {
+ *          // handle rejection here
+ *     })
+ *     .catch((e) => {// handle error here})
+ */
 function getMatchedEventIds(userId) {
     return __awaiter(this, void 0, void 0, function () {
-        var userData, data;
+        var userRef, doc, userData;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    userData = db.collections('users').doc(userId);
-                    return [4 /*yield*/, userData.get()];
+                    userRef = db.collection('users').doc(userId);
+                    return [4 /*yield*/, userRef.get()];
                 case 1:
-                    data = _a.sent();
-                    if (data.exists) {
-                        console.log("Retreived matched event ids:\n" + data['matched-events'] + "\nFor user: " + userId);
-                        return [2 /*return*/, data['matched-events']];
+                    doc = _a.sent();
+                    if (doc.exists) {
+                        userData = doc.data();
+                        console.log('Retreived matched event ids:');
+                        console.log(userData);
+                        console.log("For user: " + userId);
+                        return [2 /*return*/, userData['matched-events']];
                     }
                     console.log('User does not exist');
                     return [2 /*return*/, null];
