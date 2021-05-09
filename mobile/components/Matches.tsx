@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState, useContext } from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
@@ -8,6 +8,8 @@ import { MatchCard } from './MatchCard';
 import { FullCard } from './FullCard';
 import { MatchHeader } from './MatchHeader';
 import { baseStyles } from './style';
+import { AuthContext } from '../context/AuthContext';
+import { useMatches } from '../hooks/useMatches';
 
 type MatchesScreenRouteProp = RouteProp<RootStackParamList, 'Matches'>;
 
@@ -25,41 +27,16 @@ export const Matches: FC<Props> = ({ route, navigation }) => {
   // TODO: integrate with backend API
   const [cards, setCards] = useState(new Array<Event>());
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const user = useContext(AuthContext);
+
+  const { events, error } = useMatches(
+    user?.uid,
+  );
 
   // replace with real remote data fetching
   useEffect(() => {
-    setTimeout(() => {
-      setCards([
-        {
-          id: 1,
-          name: 'Card 1',
-          image: {
-            uri:
-              'https://media.gettyimages.com/photos/cozy-restaurant-for-gathering-with-friends-picture-id1159992039?s=612x612',
-          },
-          description: 'restaurant 1 !!!',
-        },
-        {
-          id: 2,
-          name: 'Card 2',
-          image: {
-            uri:
-              'https://thumbs.dreamstime.com/b/portrait-waitress-holding-menus-serving-busy-bar-restaurant-153985284.jpg',
-          },
-          description: 'restaurant 2 !!!',
-        },
-        {
-          id: 3,
-          name: 'Card 3',
-          image: {
-            uri:
-              'https://static3.depositphotos.com/1003631/209/i/600/depositphotos_2099183-stock-photo-fine-table-setting-in-gourmet.jpg',
-          },
-          description: 'restaurant 3 !!!',
-        },
-      ]);
-    }, 1);
-  }, []);
+    setCards(events);
+  }, [events]);
 
   const onClickHandler = () => {
     navigation.navigate('Main');

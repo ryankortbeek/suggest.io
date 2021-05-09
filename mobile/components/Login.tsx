@@ -87,6 +87,8 @@ export const Login: FC<Props> = ({ route, navigation }) => {
       signIn();
     } else if (isLogInSuccess) {
       setIsLogInSuccess(false);
+      setPassword("");
+      setEmail("");
       navigation.navigate('Main');
     } else if (isLogInFail) {
       setIsLogInFail(false);
@@ -94,6 +96,11 @@ export const Login: FC<Props> = ({ route, navigation }) => {
       creatAccount();
     } else if (isSignUpSuccess) {
       setIsSignUpSuccess(false);
+      setIsCreate(false);
+      setPassword("");
+      setEmail("");
+      setName("");
+      setVPassword("");
       navigation.navigate('Main');
     } else if (isSignUpFail) {
       setIsSignUpFail(false);
@@ -164,7 +171,7 @@ export const Login: FC<Props> = ({ route, navigation }) => {
         <TouchableHighlight
           style={styles.button}
           onPress={() => setIsLoggingIn(true)}
-          disabled={vPassword != password || password == ''}
+          
         >
           <Text style={styles.button_text}>Login</Text>
         </TouchableHighlight>
