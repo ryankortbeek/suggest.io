@@ -1,8 +1,9 @@
-import React, { FC } from 'react';
+import React, { useContext, FC } from 'react';
 import { View, Text, Image, ScrollView, TextInput } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
+import { AuthContext } from '../context/AuthContext';
 
 type MainScreenRouteProp = RouteProp<RootStackParamList, 'Main'>;
 
@@ -14,9 +15,11 @@ type Props = {
 };
 
 export const Main: FC<Props> = ({ route, navigation }) => {
+  const user = useContext(AuthContext);
+  let thing = "Hello " + user?.displayName + " email: " + user?.email
   return (
     <View>
-      <Text> THIS IS MAIN </Text>
+      <Text> {thing} </Text>
     </View>
   );
 };

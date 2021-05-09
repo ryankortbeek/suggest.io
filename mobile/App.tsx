@@ -7,12 +7,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Main } from './components/Main';
 import { Login } from './components/Login';
 import { Matches } from './components/Matches';
+import { AuthProvider } from './provider/AuthProvider';
 
 
 export type RootStackParamList = {
-  Main: {userInfo: string};
+  Main: undefined;
   Login: undefined;
-  Matches: {userInfo: string};
+  Matches: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -20,11 +21,13 @@ const Stack = createStackNavigator<RootStackParamList>();
 export default function App() {
   return (
       <NavigationContainer>
-        <Stack.Navigator  initialRouteName="Login">
-          <Stack.Screen name="Main" component={Main} />
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Matches" component={Matches} />
-        </Stack.Navigator>
+        <AuthProvider>
+          <Stack.Navigator  initialRouteName="Login">
+            <Stack.Screen name="Main" component={Main} />
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Matches" component={Matches} />
+          </Stack.Navigator>
+        </AuthProvider>
       </NavigationContainer>
   );
 }
