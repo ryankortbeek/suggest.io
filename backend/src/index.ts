@@ -1,6 +1,6 @@
 import express from 'express';
 import {getEvents, getMatchedEvents} from './api';
-import {handleEventResponse, checkAuth} from './db_handler';
+import {checkAuth, handleEventResponse, getMatchedEventIds} from './db_handler';
 
 // Routing
 const app = express();
@@ -12,23 +12,26 @@ const fs = require('fs');
 // })
 
 app.get('/', (_, res) => {
-    console.log('Welcome to suggest.io!')
+    console.log('Welcome to suggest.io!');
     res.json({message: 'Welcome to suggest.io!'});
 })
 
 app.get('/events/location/:latitude-:longitude-:radius', (req, res) => {
-    console.log(`Getting events at...\nlon: ${req.params['latitude']}\nlat: ${req.params['longitude']}\nradius: ${req.params['radius']}`);
+    console.log('GET events');
+    console.log(req.params);
     getEvents(req.params['latitude'], req.params['longitude'], req.params['radius']).then((val) => {
         res.json(val)
     })
 })
 
-app.get('/matched_events/user/:userId', (req, res) => {
-    console.log(`Getting matched events... ${req.params['userId']}`);
+app.get('/matched-events/user/:userId', (req, res) => {
+    console.log('GET matched events');
+    console.log(req.params);
     res.json(getMatchedEvents(req.params['userId']));
 })
 
 app.post('/match', (req, res) => {
+    console.log('POST match');
     console.log(req.body);
     handleEventResponse(req.body.userId, req.body.eventId, req.body.isMatch);
 })

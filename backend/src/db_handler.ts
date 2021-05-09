@@ -27,32 +27,47 @@ export function checkAuth(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function handleEventResponse(userId: string, eventId: string, match: boolean) {
-    const userData = db.collections('users').doc(userId);
-    let data = await userData.get();
-    if (!data.exists) {
-        console.log('User does not exist');
-    } else {
+    const userRef = db.collection('users').doc(userId);
+    let doc = await userRef.get();
+    if (doc.exists) {
+        let userData = doc.data();
         let events: Array<string>;
         if (match) {
-            events = data['matched-events'];
+            events = userData['matched-events'];
             events.push(eventId);
-            data['matched-events'] = events;
+            userData['matched-events'] = events;
         } else {
-            events = data['non-matched-events'];
+            events = userData['non-matched-events'];
             events.push(eventId);
-            data['non-matched-events'] = events;
+            userData['non-matched-events'] = events;
         }
-        await userData.set(data);
-        console.log(`Updated user data: ${data}`);
+        await userRef.set(userData);
+        console.log('Updated user data:');
+        console.log(userData);
+    } else {
+        console.log('User does not exist');
     }
 }
 
+/**
+ * Need to call this as seen below...
+ * getMatchedEventIds(userId)
+ *     .then((value) => {
+ *          // handle return value here
+ *     }, (reject) => {
+ *          // handle rejection here
+ *     })
+ *     .catch((e) => {// handle error here})
+ */
 export async function getMatchedEventIds(userId: string) {
-    const userData = db.collections('users').doc(userId);
-    let data = await userData.get();
-    if (data.exists) {
-        console.log(`Retreived matched event ids:\n${data['matched-events']}\nFor user: ${userId}`);
-        return data['matched-events'];
+    const userRef = db.collection('users').doc(userId);
+    let doc = await userRef.get();
+    if (doc.exists) {
+        let userData = doc.data();
+        console.log('Retreived matched event ids:');
+        console.log(userData);
+        console.log(`For user: ${userId}`);
+        return userData['matched-events'];
     }
     console.log('User does not exist');
     return null;
