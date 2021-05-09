@@ -1,8 +1,4 @@
 import express from 'express';
-<<<<<<< HEAD
-import { emitWarning, nextTick } from 'process';
-=======
->>>>>>> 1ab4fc8d80a81020256799864e6ee3112662c6ff
 import {getEvents, getMatchedEvents} from './api';
 import {checkAuth, handleEventResponse, getMatchedEventIds} from './db_handler';
 
@@ -11,9 +7,9 @@ const app = express();
 const https = require('https');
 const fs = require('fs');
 
-// app.use('/', (req, res, next) => {
-//     checkAuth(req, res, next)
-// })
+app.use('/', (req, res, next) => {
+    checkAuth(req, res, next)
+})
 
 app.get('/', (_, res) => {
     console.log('Welcome to suggest.io!');
@@ -32,6 +28,9 @@ app.get('/matched_events/:userId', (req, res) => {
     console.log('GET matched events... ' + req.params);
     console.log(req.params);
     getMatchedEvents(req.params['userId']).then((val) => {
+        if (val == null) {
+            res.json(`No matched events for user ID: ${req.params['userId']}`)
+        }
         res.json(val);
     })
 })
