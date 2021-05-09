@@ -9,7 +9,6 @@ import { Login } from './components/Login';
 import { Matches } from './components/Matches';
 import { AuthProvider } from './provider/AuthProvider';
 
-
 export type RootStackParamList = {
   Main: undefined;
   Login: undefined;
@@ -20,15 +19,14 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-      <NavigationContainer>
-        <AuthProvider>
-          <Stack.Navigator  initialRouteName="Login">
-            <Stack.Screen name="Main" component={Main} />
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Matches" component={Matches} />
-          </Stack.Navigator>
-        </AuthProvider>
-      </NavigationContainer>
+    <NavigationContainer>
+      <AuthProvider>
+        <Stack.Navigator initialRouteName='Login'>
+          <Stack.Screen name='Main' component={Main} />
+          <Stack.Screen name='Login' component={Login} />
+          <Stack.Screen name='Matches' component={Matches} />
+        </Stack.Navigator>
+      </AuthProvider>
+    </NavigationContainer>
   );
 }
-
