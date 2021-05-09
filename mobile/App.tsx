@@ -20,11 +20,13 @@ const Stack = createStackNavigator<RootStackParamList>();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Main'>
-        <Stack.Screen name='Main' component={Main} />
-        <Stack.Screen name='Login' component={Login} />
-        <Stack.Screen name='Matches' component={Matches} />
-      </Stack.Navigator>
+      <AuthProvider>
+        <Stack.Navigator initialRouteName='Login'>
+          <Stack.Screen name='Main' component={Main} />
+          <Stack.Screen name='Login' component={Login} />
+          <Stack.Screen name='Matches' component={Matches} />
+        </Stack.Navigator>
+      </AuthProvider>
     </NavigationContainer>
   );
 }
