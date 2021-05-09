@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
@@ -9,6 +9,7 @@ import { EmptyCard } from './EmptyCard';
 import { Event } from '../hooks/types';
 import { useEvents } from '../hooks/useEvents';
 import { FullCard } from './FullCard';
+import SvgUri from 'react-native-svg-uri';
 
 type MainScreenRouteProp = RouteProp<RootStackParamList, 'Main'>;
 
@@ -28,6 +29,7 @@ export const Main: FC<Props> = ({ route, navigation }) => {
   // );
   const [cards, setCards] = useState(new Array<Event>());
   const [shouldExpand, setExpand] = useState(false);
+  const cardDeck = useRef<any>(null); // TODO: figure out a better way to type check component
   // replace with real remote data fetching
   useEffect(() => {
     setTimeout(() => {
@@ -77,6 +79,7 @@ export const Main: FC<Props> = ({ route, navigation }) => {
     <View style={styles.container}>
       {cards ? (
         <SwipeCards
+          ref={cardDeck}
           cards={cards}
           renderCard={(cardData: Event) => (
             <EventCard
@@ -92,6 +95,30 @@ export const Main: FC<Props> = ({ route, navigation }) => {
       ) : (
         <EmptyCard text='No more cards...' />
       )}
+      <View style={styles.buttons}>
+        <TouchableOpacity
+          style={styles.button_left}
+          onPress={() => {
+            if (cardDeck.current !== null) {
+              cardDeck.current._forceLeftSwipe();
+            }
+          }}
+        >
+          <SvgUri source={require('../assets/close_black_24dp.svg')} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button_right}
+          onPress={() => {
+            if (cardDeck.current !== null) {
+              cardDeck.current._forceRightSwipe();
+            }
+          }}
+        >
+          <SvgUri
+            source={require('../assets/favorite_border_black_24dp.svg')}
+          />
+        </TouchableOpacity>
+      </View>
       {shouldExpand && (
         <FullCard cardData={cards[0]} onClickHandler={() => setExpand(false)} />
       )}
@@ -105,5 +132,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttons: {
+    flexDirection: 'row',
+    marginBottom: 50,
+  },
+  button_left: {
+    marginRight: 100,
+  },
+  button_right: {
+    marginLeft: 100,
   },
 });
