@@ -1,10 +1,12 @@
-import React, { ChangeEvent, FC } from 'react';
+import React, { useContext, FC } from 'react';
 import { View, Text } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import { TextInput, Button } from 'react-native-paper';
 import { useState, useEffect } from 'react';
+import { AuthContext } from '../context/AuthContext';
+import { auth } from '../util/firebaseSetup';
 
 type LoginScreenRouteProp = RouteProp<RootStackParamList, 'Login'>;
 
@@ -19,14 +21,23 @@ type Props = {
 };
 
 export const Login: FC<Props> = ({ route, navigation }) => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [vPassword, setVPassword] = useState('');
   const [name, setName] = useState('');
   const [isCreate, setIsCreate] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isSigningUp, setIsSigningUp] = useState(false);
+  const [isLogInSuccess, setIsLogInSuccess] = useState(false);
+  const [isSignUpSuccess, setIsSignUpSuccess] = useState(false);
+  const [isLogInFail, setIsLogInFail] = useState(false);
+  const [isSignUpFail, setIsSignUpFail] = useState(false);
+  const [error, setError] = useState('');
 
-  const onChangeUsername = (username: string) => {
-    setUsername(username);
+  const user = useContext(AuthContext);
+
+  const onChangeEmail = (email: string) => {
+    setEmail(email);
   };
 
   const onChangePassword = (password: string) => {
@@ -40,30 +51,82 @@ export const Login: FC<Props> = ({ route, navigation }) => {
   const onChangeVPassword = (password: string) => {
     setVPassword(password);
   };
+
+  useEffect(() => {
+    if (isLoggingIn) {
+      signIn();
+    } else if (isLogInSuccess) {
+      setIsLogInSuccess(false);
+      navigation.navigate('Main');
+    } else if (isLogInFail) {
+      setIsLogInFail(false);
+    } else if (isSigningUp) {
+      creatAccount();
+    } else if (isSignUpSuccess) {
+      setIsSignUpSuccess(false);
+      navigation.navigate('Main');
+    } else if (isSignUpFail) {
+      setIsSignUpFail(false);
+    }
+  }, [
+    isLoggingIn,
+    isLogInSuccess,
+    isLogInFail,
+    isSigningUp,
+    isSignUpSuccess,
+    isSignUpFail,
+  ]);
+
   const changeSignUp = () => {
-    setUsername('');
+    setEmail('');
     setPassword('');
     setIsCreate(true);
+  };
+
+  // https://medium.com/geekculture/firebase-auth-with-react-and-typescript-abeebcd7940a
+  const creatAccount = async () => {
+    try {
+      // 
+      await auth.createUserWithEmailAndPassword(email, password)
+      .then(result => {
+        return result.user?.updateProfile({displayName: name});
+      });
+
+      setIsSigningUp(false);
+      setIsSignUpSuccess(true);
+
+    } catch (error) {
+      setError(error.message);
+      setIsSigningUp(false);
+      setIsSignUpFail(true);
+    }
+  };
+
+  // https://medium.com/geekculture/firebase-auth-with-react-and-typescript-abeebcd7940a
+  const signIn = async () => {
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      setIsLoggingIn(false);
+      setIsLogInSuccess(true);
+
+    } catch (error) {
+      setError(error.message);
+      setIsLoggingIn(false);
+      setIsLogInFail(true);
+    }
   };
 
   const login = () => {
     return (
       <>
-        <TextInput
-          label='username'
-          value={username}
-          onChangeText={onChangeUsername}
-        />
+        <TextInput label='email' value={email} onChangeText={onChangeEmail} />
         <TextInput
           secureTextEntry={true}
           label='password'
           value={password}
           onChangeText={onChangePassword}
         />
-        <Button
-          onPress={() => navigation.navigate('Main', { userInfo: 'Jane' })}
-          mode='outlined'
-        >
+        <Button onPress={() => setIsLoggingIn(true)} mode='outlined'>
           LOGIN
         </Button>
         <Text>
@@ -82,12 +145,8 @@ export const Login: FC<Props> = ({ route, navigation }) => {
   const signup = () => {
     return (
       <>
-        <TextInput label='Name' value={name} onChangeText={onChangeName} />
-        <TextInput
-          label='username'
-          value={username}
-          onChangeText={onChangeUsername}
-        />
+        <TextInput secureTextEntry={false} label='Name' value={name} onChangeText={onChangeName} />
+        <TextInput secureTextEntry={false} label='email' value={email} onChangeText={onChangeEmail} />
         <TextInput
           secureTextEntry={true}
           label='password'
@@ -102,7 +161,7 @@ export const Login: FC<Props> = ({ route, navigation }) => {
           error={vPassword != password}
         />
         <Button
-          onPress={() => navigation.navigate('Main', { userInfo: 'Jane' })}
+          onPress={() => setIsSigningUp(true)}
           mode='outlined'
           disabled={vPassword != password || password == ''}
         >
@@ -115,6 +174,7 @@ export const Login: FC<Props> = ({ route, navigation }) => {
     <View>
       <Text> Suggest.io </Text>
       {isCreate ? signup() : login()}
+      <Text> {error} </Text>
     </View>
   );
 };

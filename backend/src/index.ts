@@ -7,9 +7,9 @@ const app = express();
 const https = require('https');
 const fs = require('fs');
 
-// app.use('/', (req, res, next) => {
-//     checkAuth(req, res, next)
-// })
+app.use('/', (req, res, next) => {
+    checkAuth(req, res, next)
+})
 
 app.get('/', (_, res) => {
     console.log('Welcome to suggest.io!');
@@ -33,12 +33,14 @@ app.get('/events/location/:latitude-:longitude-:radius', (req, res) => {
         });
 })
 
-app.get('/matched-events/user/:userId', (req, res) => {
-    console.log('GET matched events');
+app.get('/matched_events/:userId', (req, res) => {
+    console.log('GET matched events... ' + req.params);
     console.log(req.params);
     getMatchedEvents(req.params['userId'])
         .then((val) => {
-            console.log(val);
+            if (val == null) {
+                res.status(404).json(`No matched events for user ID: ${req.params['userId']}`);
+            }
             res.status(200).json(val);
         }, (rej) => {
             console.log(rej);
@@ -54,16 +56,38 @@ app.post('/match', (req, res) => {
     console.log('POST match');
     console.log(req.body);
     handleEventResponse(req.body.userId, req.body.eventId, req.body.isMatch)
-        .then((val) => {res.status(200).json(val)}, (rej) => {res.status(406).end()})
-        .catch((e) => {res.status(406).end()});
+        .then((val) => {
+            if (val == null) {
+                res.status(404).end();
+            }
+            res.status(200).end();
+        }, (rej) => {
+            console.log(rej);
+            res.status(404).end();
+        })
+        .catch((e) => {
+            console.log(e);
+            res.status(404).end();
+        });
 })
 
 app.post('/sign-up', (req, res) => {
     console.log('POST sign up');
     console.log(req.body);
     signUpUser(req.body.userId)
-        .then((val) => {res.status(200).json(val)}, (rej) => {res.status(406).end()})
-        .catch((e) => {res.status(406).end()});
+        .then((val) => {
+            if (val == null) {
+                res.status(404).end();
+            }
+            res.status(200).end();
+        }, (rej) => {
+            console.log(rej);
+            res.status(404).end();
+        })
+        .catch((e) => {
+            console.log(e);
+            res.status(404).end();
+        });
 })
 
 // HTTPS stuff
