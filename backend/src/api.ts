@@ -136,48 +136,49 @@ function extractFutureEvents(events: Array<IEvent>) {
 }
 
 function orderEvents(events: Array<IEvent>, categoryWeights: Map<string, number>) {
-    return events;
-    // // finds available categories
-    // let categories = new Map<string, number>();
-    // events.forEach((val, ind, arr) => {
-    //     if (val.category != null) {
-    //         if (categories.has(val.category)) {
-    //             let curr = categories.get(val.category);
-    //             if (curr != null) {categories.set(val.category, curr + 1)}
-    //         } else {
-    //             categories.set(val.category, 1);
-    //         }
-    //     }
-    // });
-    // let numToCategory = new Map<number, string>();
-    // // map numbers to available categories
-    // let totalWeight = 0;
-    // let numDistinctCategories = 0;
-    // for (const key in categories.keys()) {
-    //     // map distinct number to category
-    //     numToCategory.set(numDistinctCategories, key);
-    //     numDistinctCategories++;
-    //     // add to total weight (key will always be a valid category)
-    //     let weight = categoryWeights.get(key);
-    //     if (weight != null) {
-    //         totalWeight += weight;
-    //     } else {
-    //         totalWeight += DEFAULT_WEIGHTING;
-    //     }
-    // }
-    // // weighted sample over those categories and order accordingly
-    // for (let i = 0; i < events.length; i++) {
-    //     let rand = Math.floor(Math.random() * (totalWeight + 1));
-    //     let lowerBound = 0;
-    //     for (const key in categories.keys()) {
-    //         let keyWeight = extractCategoryWeight(key, categoryWeights);
-    //         if ((rand >= lowerBound) && (rand < lowerBound + keyWeight)) {
-    //             // add shit
-    //         }
-    //         lowerBound += keyWeight;
-    //     }
-    // }
-    // // order accordingly
+    // finds available categories
+    let categories = new Map<string, number>();
+    events.forEach((val, ind, arr) => {
+        if (val.category != null) {
+            if (categories.has(val.category)) {
+                let curr = categories.get(val.category);
+                if (curr != null) {categories.set(val.category, curr + 1)}
+            } else {
+                categories.set(val.category, 1);
+            }
+        }
+    });
+    // calculate total weight over valid categories
+    let totalWeight = 0;
+    for (const key in categories.keys()) {
+        // add to total weight (key will always be a valid category)
+        let weight = categoryWeights.get(key);
+        if (weight != null) {
+            totalWeight += weight;
+        } else {
+            totalWeight += DEFAULT_WEIGHTING;
+        }
+    }
+    // weighted sample over those categories and order accordingly
+    let orderedEvents: Array<IEvent> = [];
+    for (let i = 0; i < events.length; i++) {
+        let rand = Math.floor(Math.random() * (totalWeight + 1));
+        let lowerBound = 0;
+        for (const key in categories.keys()) {
+            let keyWeight = extractCategoryWeight(key, categoryWeights);
+            if ((rand >= lowerBound) && (rand < lowerBound + keyWeight)) {
+                for (let j = 0; j < events.length; j++) {
+                    if (events[i].category == key) {
+                        orderedEvents.push(events[i]);
+                        events[i].category = 'obyrnes-luck-of-the-irish';
+                        break;
+                    }
+                }
+            }
+            lowerBound += keyWeight;
+        }
+    }
+    return orderedEvents;
 }
 
 function extractCategoryWeight(key: string, categoryWeights: Map<string, number>) {
