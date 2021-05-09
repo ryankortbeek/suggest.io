@@ -10,6 +10,7 @@ import { Event } from '../hooks/types';
 import { useEvents } from '../hooks/useEvents';
 import { FullCard } from './FullCard';
 import SvgUri from 'react-native-svg-uri';
+import { MainHeader } from './MainHeader';
 
 type MainScreenRouteProp = RouteProp<RootStackParamList, 'Main'>;
 
@@ -77,24 +78,23 @@ export const Main: FC<Props> = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      {cards ? (
-        <SwipeCards
-          ref={cardDeck}
-          cards={cards}
-          renderCard={(cardData: Event) => (
-            <EventCard
-              cardData={cardData}
-              onClickHandler={() => setExpand(true)}
-            />
-          )}
-          keyExtractor={(cardData: Event) => String(cardData.id)}
-          renderNoMoreCards={() => <EmptyCard text='No more cards...' />}
-          handleYup={handleYup}
-          handleNope={handleNope}
-        />
-      ) : (
-        <EmptyCard text='No more cards...' />
-      )}
+      <MainHeader />
+      <View style={styles.card_deck}>
+        {cards ? (
+          <SwipeCards
+            ref={cardDeck}
+            cards={cards}
+            renderCard={(cardData: Event) => <EventCard cardData={cardData} />}
+            keyExtractor={(cardData: Event) => String(cardData.id)}
+            renderNoMoreCards={() => <EmptyCard text='No more cards...' />}
+            handleYup={handleYup}
+            handleNope={handleNope}
+          />
+        ) : (
+          <EmptyCard text='No more cards...' />
+        )}
+      </View>
+
       <View style={styles.buttons}>
         <TouchableOpacity
           style={styles.button_left}
@@ -105,6 +105,12 @@ export const Main: FC<Props> = ({ route, navigation }) => {
           }}
         >
           <SvgUri source={require('../assets/close_black_24dp.svg')} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button_middle}
+          onPress={() => setExpand(true)}
+        >
+          <SvgUri source={require('../assets/info_black_24dp.svg')} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button_right}
@@ -119,6 +125,7 @@ export const Main: FC<Props> = ({ route, navigation }) => {
           />
         </TouchableOpacity>
       </View>
+
       {shouldExpand && (
         <FullCard cardData={cards[0]} onClickHandler={() => setExpand(false)} />
       )}
@@ -132,15 +139,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'column',
   },
   buttons: {
     flexDirection: 'row',
     marginBottom: 50,
   },
   button_left: {
-    marginRight: 100,
+    marginRight: 50,
   },
   button_right: {
-    marginLeft: 100,
+    marginLeft: 50,
+  },
+  button_middle: {
+    marginLeft: 50,
+    marginRight: 50,
+  },
+  card_deck: {
+    flex: 2,
   },
 });
