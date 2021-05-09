@@ -16,6 +16,7 @@ import { AuthContext } from '../context/AuthContext';
 import { auth } from '../util/firebaseSetup';
 import { postSignUp } from '../hooks/api/user';
 import { baseStyles } from './style';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 type LoginScreenRouteProp = RouteProp<RootStackParamList, 'Login'>;
 
@@ -160,7 +161,13 @@ export const Login: FC<Props> = ({ route, navigation }) => {
           onChange={onChangePassword}
           secureTextEntry={true}
         />
-        <Button title={'Login'} onPress={() => setIsLoggingIn(true)} />
+        <TouchableHighlight
+          style={styles.button}
+          onPress={() => setIsLoggingIn(true)}
+          disabled={vPassword != password || password == ''}
+        >
+          <Text style={styles.button_text}>Login</Text>
+        </TouchableHighlight>
         <Text>
           Don't have an account?{' '}
           <Text
@@ -177,40 +184,43 @@ export const Login: FC<Props> = ({ route, navigation }) => {
   const signup = () => {
     return (
       <>
-        <TextInput
+        <TextField
+          label='name'
           secureTextEntry={false}
           value={name}
-          onChangeText={onChangeName}
-          style={styles.text_input}
+          onChange={onChangeName}
         />
-        <TextInput
-          secureTextEntry={false}
+        <TextField
+          label='email'
           value={email}
-          onChangeText={onChangeEmail}
-          style={styles.text_input}
+          onChange={onChangeEmail}
+          secureTextEntry={false}
         />
-        <TextInput
-          secureTextEntry={true}
+        <TextField
+          label='password'
           value={password}
-          onChangeText={onChangePassword}
-          style={styles.text_input}
-        />
-        <TextInput
+          onChange={onChangePassword}
           secureTextEntry={true}
-          value={vPassword}
-          onChangeText={onChangeVPassword}
-          style={styles.text_input}
         />
-        <Button
-          title='Sign Up'
+        <TextField
+          label='confirm password'
+          value={vPassword}
+          onChange={onChangeVPassword}
+          secureTextEntry={true}
+        />
+        <TouchableHighlight
+          style={styles.button}
           onPress={() => setIsSigningUp(true)}
           disabled={vPassword != password || password == ''}
-        />
+        >
+          <Text style={styles.button_text}>Sign Up</Text>
+        </TouchableHighlight>
       </>
     );
   };
   return (
-    <View style={styles.container}>
+    <View style={styles.basic_container}>
+      <Text style={styles.main_title}>suggest.io</Text>
       {isCreate ? signup() : login()}
       <Text> {error} </Text>
     </View>
@@ -220,12 +230,6 @@ export const Login: FC<Props> = ({ route, navigation }) => {
 const styles = {
   ...baseStyles,
   ...StyleSheet.create({
-    container: {
-      flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
     text_input: {
       width: undefined,
       height: undefined,
@@ -234,7 +238,7 @@ const styles = {
     },
     text_input_container: {
       borderRadius: 15,
-      borderWidth: 1,
+      backgroundColor: '#FFFFFF',
       width: '70%',
       height: 60,
       marginBottom: 50,
@@ -242,6 +246,28 @@ const styles = {
     text_input_label: {
       marginLeft: 10,
       marginTop: 5,
+    },
+    main_title: {
+      fontSize: 40,
+      fontFamily: 'System',
+      fontWeight: 'bold',
+      paddingBottom: 60,
+      color: '#FFFFFF',
+    },
+    button: {
+      borderRadius: 15,
+      backgroundColor: '#FFFFFF',
+      width: 150,
+      height: 50,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 20,
+    },
+    button_text: {
+      fontSize: 22,
+      fontFamily: 'System',
+      fontWeight: 'bold',
+      color: '#000000',
     },
   }),
 };
