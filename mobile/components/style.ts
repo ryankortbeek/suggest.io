@@ -14,13 +14,13 @@ export const baseStyles = StyleSheet.create({
   },
   title: {
     fontSize: 36,
-    fontFamily: 'Roboto',
+    fontFamily: 'System',
     fontWeight: 'bold',
     color: TEXT_COLOR,
   },
   body: {
     fontSize: 22,
-    fontFamily: 'Roboto',
+    fontFamily: 'System',
     color: TEXT_COLOR,
   },
   main_component: {
