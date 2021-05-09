@@ -1,6 +1,6 @@
 .vscode/launch.json
 backend/reqs.txt
-backend/libs/
+backend/lib/
 backend/src/testing.ts
 node_modules/
 .expo/

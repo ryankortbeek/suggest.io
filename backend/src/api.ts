@@ -40,12 +40,14 @@ export function getEvents(userId: string, latitude: string, longitude: string, r
                     id, name, image_url, description, time_start, time_end, event_site_url, category
                 })
             );
-            console.log(all_events);
+            // console.log(all_events);
+            console.log(`${all_events.length} events after api call...`);
             let filtered_events = extractFutureEvents(all_events);
+            console.log(`${filtered_events.length} events after extracting current/future events...`);
             getCategoryWeightings(userId)
                 .then((val) => {
                     filtered_events = orderEvents(filtered_events, val);
-                    console.log(`${filtered_events.length} events after extracting current/future events...`);
+                    console.log(`${filtered_events.length} events reordering them...`);
                     if (filtered_events.length == 0) {
                         return null;
                     }
@@ -168,9 +170,9 @@ function orderEvents(events: Array<IEvent>, categoryWeights: Map<string, number>
             let keyWeight = extractCategoryWeight(key, categoryWeights);
             if ((rand >= lowerBound) && (rand < lowerBound + keyWeight)) {
                 for (let j = 0; j < events.length; j++) {
-                    if (events[i].category == key) {
-                        orderedEvents.push(events[i]);
-                        events[i].category = 'obyrnes-luck-of-the-irish';
+                    if (events[j].category == key) {
+                        orderedEvents.push(events[j]);
+                        events[j].category = 'obyrnes-luck-of-the-irish';
                         break;
                     }
                 }
