@@ -22,7 +22,7 @@ export const FullCard: FC<Props> = ({ cardData, onClickHandler }) => {
         <View style={styles.image_container}>
           <Image source={cardData.image} style={styles.image} />
         </View>
-        <Text style={{ ...styles.title, ...styles.spacing }}>
+        <Text style={{ ...styles.title, ...styles.vertical_spacing }}>
           {cardData.name}
         </Text>
         <Text style={styles.body}>{cardData.description}</Text>

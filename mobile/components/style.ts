@@ -39,8 +39,12 @@ export const baseStyles = StyleSheet.create({
     height: '100%',
     flexDirection: 'column',
   },
-  spacing: {
+  vertical_spacing: {
     marginTop: 10,
     marginBottom: 10,
+  },
+  horizontal_spacing: {
+    marginLeft: 10,
+    marginRight: 10,
   },
 });

@@ -8,11 +8,18 @@ type Props = {
 };
 export const MatchHeader: FC<Props> = ({ handleBackButton }) => {
   return (
-    <View style={styles.header_container}>
-      <TouchableOpacity onPress={handleBackButton} style={styles.button_left}>
-        <SvgUri source={require('../assets/arrow_back_black_24dp.svg')} />
-      </TouchableOpacity>
-      <Text style={styles.title}>My Matches</Text>
+    <View style={styles.container}>
+      <View style={styles.button_container}>
+        <TouchableOpacity onPress={handleBackButton}>
+          <SvgUri source={require('../assets/arrow_back_black_24dp.svg')} />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.text_container}>
+        <Text style={{ ...styles.title, ...styles.text_color }}>
+          My Matches
+        </Text>
+      </View>
     </View>
   );
 };
@@ -20,8 +27,22 @@ export const MatchHeader: FC<Props> = ({ handleBackButton }) => {
 const styles = {
   ...baseStyles,
   ...StyleSheet.create({
-    button_left: {
-      marginRight: 100,
+    container: {
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+      height: 100,
+      paddingTop: 50,
+      width: '100%',
+    },
+    button_container: {
+      marginLeft: 40,
+    },
+    text_container: {
+      marginRight: 85,
+    },
+    text_color: {
+      color: '#000000',
     },
   }),
 };

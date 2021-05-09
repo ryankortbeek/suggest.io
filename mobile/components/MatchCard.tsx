@@ -14,9 +14,28 @@ export const MatchCard: FC<Props> = ({ cardData, onClickHandler }) => {
     <View style={styles.container}>
       <TouchableWithoutFeedback onPress={onClickHandler}>
         <View style={styles.card}>
-          <Image source={cardData.image} style={styles.image} />
-          <Text style={styles.title}>{cardData.name}</Text>
-          <Text style={styles.body}>{cardData.description}</Text>
+          <View style={styles.image_container}>
+            <Image source={cardData.image} style={styles.image} />
+          </View>
+          <View
+            style={{ ...styles.text_container, ...styles.horizontal_spacing }}
+          >
+            <Text
+              style={{ ...styles.title, ...styles.text_color }}
+              numberOfLines={1}
+            >
+              {cardData.name}
+            </Text>
+            <Text
+              style={{
+                ...styles.body,
+                ...styles.text_color,
+              }}
+              numberOfLines={1}
+            >
+              {cardData.description}
+            </Text>
+          </View>
         </View>
       </TouchableWithoutFeedback>
     </View>
@@ -31,19 +50,34 @@ const styles = {
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'column',
+      margin: 10,
     },
     card: {
       backgroundColor: '#fff',
       flexDirection: 'row',
       width: 300,
-      height: 175,
+      height: 150,
+      borderRadius: 10,
+    },
+    image_container: {
+      height: '100%',
+      width: 100,
     },
     image: {
       flex: 1,
       resizeMode: 'cover',
+      width: undefined,
+      height: undefined,
+      marginLeft: 10,
+      marginTop: 10,
+      marginBottom: 10,
+    },
+    text_container: {
+      flexDirection: 'column',
       justifyContent: 'center',
-      width: '100%',
-      height: '100%',
+    },
+    text_color: {
+      color: '#000000',
     },
   }),
 };
