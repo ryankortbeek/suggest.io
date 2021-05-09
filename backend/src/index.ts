@@ -120,6 +120,13 @@ app.post('/sign-up', (req, res) => {
 //     console.log('The application is listening on port 3000!');
 // })
 
+const bodyParser = require('body-parser');
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+
 app.listen(process.env.PORT, () => {
   console.log('The application is listening on port' + process.env.PORT);
 });
