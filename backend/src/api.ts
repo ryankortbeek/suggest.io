@@ -1,11 +1,15 @@
 import axios, { AxiosResponse } from 'axios';
-import { getMatchedEventIds } from './db_handler';
+import {getMatchedEventIds} from './db_handler';
 
 interface IEvent {
-    id: string,
-    name: string,
-    image_url: string,
-    description: string
+  id: string,
+  name: string,
+  image_url: string,
+  description: string,
+  time_start?: string,
+  time_end?: string,
+  event_site_url?: string,
+  category?: string
 }
 
 export interface IEventResponse {
@@ -33,16 +37,26 @@ export function getEvents(latitude: string, longitude: string, radius: string) {
         }
       })
       .then((response) => {
-        const results: IEventResponse = {
-          id: new Date().getTime(),
-          events: response.data.events.map(({id, name, image_url, description}: IEvent)=>({id, name, image_url, description}))
-        };
-        return results;
+
+        // Return null if no events for input params
+        if (response.data.events.length <= 0) {
+          return null;
+        } else {
+          
+          // Filter and return events
+          const results: IEventResponse = {
+            id: new Date().getTime(),
+            events: response.data.events.map(({id, name, image_url, description, time_start, time_end, event_site_url, category}: IEvent)=>({id, name, image_url, description, time_start, time_end, event_site_url, category}))
+          };
+
+          return results;
+        }
       }, (rej) => {
         console.log(rej)})
-  
-      .catch((e) => console.log(e)).finally(() => {return null});
+      
+        .catch((e) => console.log(e)).finally(() => {return null});
       return res;
+      
   }
 
 /**
