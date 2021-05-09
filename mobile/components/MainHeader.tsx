@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import SvgUri from 'react-native-svg-uri';
 import { baseStyles } from './style';
 
@@ -12,7 +12,7 @@ export const MainHeader: FC<Props> = ({
   handleMenuButton,
 }) => {
   return (
-    <View style={styles.basic_container}>
+    <View style={styles.header_container}>
       <TouchableOpacity style={styles.button_left} onPress={handleMenuButton}>
         <SvgUri source={require('../assets/menu_black_24dp.svg')} />
       </TouchableOpacity>
