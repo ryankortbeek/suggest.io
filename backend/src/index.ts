@@ -92,10 +92,13 @@ app.post('/match', (req, res) => {
         });
     }
 })
+const bodyParser = require('body-parser');
+const urlencodedParser = bodyParser.json();
 
-app.post('/sign-up', (req, res) => {
+app.post('/sign-up', urlencodedParser, (req, res) => {
     console.log('POST sign up');
     console.log(req.body);
+    console.log(req.body.userId);
     signUpUser(req.body.userId)
         .then((val) => {
             if (val == null) {res.status(404).end()}
@@ -120,6 +123,6 @@ app.post('/sign-up', (req, res) => {
 //     console.log('The application is listening on port 3000!');
 // })
 
-app.listen(3000, () => {
-    console.log('The application is listening on port 3000!');
-})
+app.listen(process.env.PORT, () => {
+  console.log('The application is listening on port' + process.env.PORT);
+});

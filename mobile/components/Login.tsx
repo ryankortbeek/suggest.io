@@ -7,6 +7,7 @@ import { TextInput, Button } from 'react-native-paper';
 import { useState, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { auth } from '../util/firebaseSetup';
+import { postSignUp } from '../hooks/api/user';
 
 type LoginScreenRouteProp = RouteProp<RootStackParamList, 'Login'>;
 
@@ -89,7 +90,8 @@ export const Login: FC<Props> = ({ route, navigation }) => {
       // 
       await auth.createUserWithEmailAndPassword(email, password)
       .then(result => {
-        return result.user?.updateProfile({displayName: name});
+          result.user?.updateProfile({displayName: name});
+          postSignUp(user?.uid);
       });
 
       setIsSigningUp(false);

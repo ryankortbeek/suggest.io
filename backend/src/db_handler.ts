@@ -85,6 +85,7 @@ export async function getMatchedEventIds(userId: string) {
 }
 
 export async function signUpUser(userId: string) {
+    console.log(userId);
     const res = await db.collection('users').doc(userId).set({
         'matched-events': [],
         'non-matched-events': [],
