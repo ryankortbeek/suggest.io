@@ -22,14 +22,15 @@ export interface IEventData {
 export const useEvents = (
   userId: string,
   lat: string,
-  lon: string
+  lon: string,
+  radius: string,
 ): IEventData => {
   const [events, setEvents] = useState(new Array<Event>());
   const [error, setError] = useState<EventError>(NONE);
 
   useEffect(() => {
     if (events.length === 0) {
-      getAllEvents(userId, lat, lon)
+      getAllEvents(userId, lat, lon, radius)
         .then((resp) => {
           setEvents(
             resp.data.events.map((e) => {
@@ -44,7 +45,7 @@ export const useEvents = (
         })
         .catch((_err) => {
           setError(FETCH_ERROR);
-          console.log('something went wrong :(');
+          console.log('something went wrong 1 :(');
         });
     }
   }, [events]);
@@ -54,6 +55,7 @@ export const useEvents = (
     postMatch(userId, eventId, isMatch)
       .then((_resp) => {
         events.pop();
+        setError(POST_ERROR);
       })
       .catch((_) => {
         setError(POST_ERROR);
