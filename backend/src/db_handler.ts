@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from 'express';
 
-const DEFAULT_WEIGHTING: number = 61;
+export const DEFAULT_WEIGHTING: number = 61;
 const MIN_WEIGHT: number = 11;
 const MAX_WEIGHT: number = 111;
 const DELTA: number = 10;
