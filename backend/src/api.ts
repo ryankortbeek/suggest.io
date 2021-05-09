@@ -40,30 +40,27 @@ export function getEvents(userId: string, latitude: string, longitude: string, r
                     id, name, image_url, description, time_start, time_end, event_site_url, category
                 })
             );
-            // console.log(all_events);
             console.log(`${all_events.length} events after api call...`);
             let filtered_events = extractFutureEvents(all_events);
             console.log(`${filtered_events.length} events after extracting current/future events...`);
-            getCategoryWeightings(userId)
+            return getCategoryWeightings(userId)
                 .then((val) => {
-                    filtered_events = orderEvents(filtered_events, val);
-                    console.log(`${filtered_events.length} events reordering them...`);
-                    if (filtered_events.length == 0) {
-                        return null;
-                    }
+                    filtered_events = orderEvents(filtered_events, new Map(Object.entries(val)));
+                    console.log(`${filtered_events.length} events after reordering...`);
+                    if (filtered_events.length == 0) {return null}
                     const res: IEventResponse = {id: new Date().getTime(), events: filtered_events};
                     return res;
                 }, (rej) => {
                     console.log(rej);
                 })
                 .catch((e) => {console.log(e)})
-                .finally(() => {return null})
+                .finally(() => {return null});
         }, (rej) => {
             console.log(rej);
         })
         .catch((e) => console.log(e))
         .finally(() => {return null});
-    return res;  
+    return res;
 }
 
 /**
@@ -139,43 +136,35 @@ function extractFutureEvents(events: Array<IEvent>) {
 
 function orderEvents(events: Array<IEvent>, categoryWeights: Map<string, number>) {
     // finds available categories
-    let categories = new Map<string, number>();
-    events.forEach((val, ind, arr) => {
-        if (val.category != null) {
-            if (categories.has(val.category)) {
-                let curr = categories.get(val.category);
-                if (curr != null) {categories.set(val.category, curr + 1)}
-            } else {
-                categories.set(val.category, 1);
+    let categories: Array<string> = [];
+    let totalWeight = 0;
+    for (let i = 0; i < events.length; i++) {
+        let cat = events[i].category;
+        if (cat != null) {
+            if (categories.indexOf(cat) == -1) {
+                categories.push(cat)
+                // calculate total weight over valid categories
+                let weight = categoryWeights.get(cat);
+                if (weight != null) {totalWeight += weight} 
+                else {totalWeight += DEFAULT_WEIGHTING}
             }
         }
-    });
-    // calculate total weight over valid categories
-    let totalWeight = 0;
-    for (const key in categories.keys()) {
-        // add to total weight (key will always be a valid category)
-        let weight = categoryWeights.get(key);
-        if (weight != null) {
-            totalWeight += weight;
-        } else {
-            totalWeight += DEFAULT_WEIGHTING;
-        }
-    }
+    };
     // weighted sample over those categories and order accordingly
     let orderedEvents: Array<IEvent> = [];
-    for (let i = 0; i < events.length; i++) {
+    while (orderedEvents.length != events.length) {
         let rand = Math.floor(Math.random() * (totalWeight + 1));
         let lowerBound = 0;
-        for (const key in categories.keys()) {
-            let keyWeight = extractCategoryWeight(key, categoryWeights);
-            if ((rand >= lowerBound) && (rand < lowerBound + keyWeight)) {
-                for (let j = 0; j < events.length; j++) {
-                    if (events[j].category == key) {
-                        orderedEvents.push(events[j]);
-                        events[j].category = 'obyrnes-luck-of-the-irish';
+        for (const j in categories) {
+            let keyWeight = extractCategoryWeight(categories[j], categoryWeights);
+            if ((lowerBound <= rand) && (rand < lowerBound + keyWeight)) {
+                for (let k = 0; k < events.length; k++) {
+                    if ((events[k].category == categories[j]) && (orderedEvents.indexOf(events[k]) == -1)) {
+                        orderedEvents.push(events[k]);
                         break;
                     }
                 }
+                break;
             }
             lowerBound += keyWeight;
         }

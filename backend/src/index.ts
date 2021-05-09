@@ -5,8 +5,10 @@ import {checkAuth, handleEventResponse, signUpUser} from './db_handler';
 
 // Routing
 const app = express();
-const https = require('https');
-const fs = require('fs');
+// const https = require('https');
+// const fs = require('fs');
+const bodyParser = require('body-parser');
+const urlencodedParser = bodyParser.json();
 
 // app.use('/', (req, res, next) => {
 //     checkAuth(req, res, next)
@@ -61,7 +63,7 @@ app.get('/matched-events/user/:userId', (req, res) => {
         });
 })
 
-app.post('/match', (req, res) => {
+app.post('/match', urlencodedParser, (req, res) => {
     console.log('POST match');
     console.log(req.body);
     if (req.body.length == 4) {
@@ -92,8 +94,6 @@ app.post('/match', (req, res) => {
         });
     }
 })
-const bodyParser = require('body-parser');
-const urlencodedParser = bodyParser.json();
 
 app.post('/sign-up', urlencodedParser, (req, res) => {
     console.log('POST sign up');
