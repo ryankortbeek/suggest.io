@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 const PRIMARY_COLOR = '#1073AA';
-const SECONDARY_COLOR = '#90CAEA';
+export const SECONDARY_COLOR = '#90CAEA';
 const TEXT_COLOR = '#FFFFFF';
 
 export const baseStyles = StyleSheet.create({
@@ -27,10 +27,20 @@ export const baseStyles = StyleSheet.create({
     flex: 2,
   },
   header_container: {
-    backgroundColor: PRIMARY_COLOR,
     alignItems: 'center',
     flexDirection: 'row',
     height: 100,
     paddingTop: 50,
+  },
+  scrollable: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    width: '100%',
+    height: '100%',
+    flexDirection: 'column',
+  },
+  spacing: {
+    marginTop: 10,
+    marginBottom: 10,
   },
 });

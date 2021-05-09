@@ -69,11 +69,13 @@ export const Main: FC<Props> = ({ route, navigation }) => {
   }, []);
 
   const handleYup = (card: Event) => {
+    // TODO: uncomment
     // handleSwipe(route.params.userInfo, card.id, true);
     return true; // return false if you wish to cancel the action
   };
 
   const handleNope = (card: Event) => {
+    // TODO: uncomment
     // handleSwipe(route.params.userInfo, card.id, false);
     return true;
   };

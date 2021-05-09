@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Event } from '../hooks/types';
 import SvgUri from 'react-native-svg-uri';
-import { baseStyles } from './style';
+import { baseStyles, SECONDARY_COLOR } from './style';
 
 type Props = {
   cardData: Event;
@@ -12,47 +12,55 @@ type Props = {
 
 export const FullCard: FC<Props> = ({ cardData, onClickHandler }) => {
   return (
-    <View style={styles.card}>
-      <ScrollView>
+    <View style={styles.overlay_container}>
+      <View style={styles.close_button}>
         <TouchableOpacity onPress={onClickHandler}>
-          <SvgUri source={require('../assets/arrow_back_black_24dp.svg')} />
+          <SvgUri source={require('../assets/close_black_24dp.svg')} />
         </TouchableOpacity>
+      </View>
+      <ScrollView style={styles.scrollable}>
         <View style={styles.image_container}>
           <Image source={cardData.image} style={styles.image} />
         </View>
-        <Text style={styles.title}>{cardData.name}</Text>
+        <Text style={{ ...styles.title, ...styles.spacing }}>
+          {cardData.name}
+        </Text>
         <Text style={styles.body}>{cardData.description}</Text>
       </ScrollView>
     </View>
   );
 };
 
-// TODO: styling
-// - font + size
-// - overflow for description
-// - info button
 const styles = {
   ...baseStyles,
   ...StyleSheet.create({
-    card: {
+    overlay_container: {
       flex: 1,
       position: 'absolute',
       justifyContent: 'center',
       alignItems: 'center',
-      width: '90%',
-      height: '100%',
-      backgroundColor: '#1073AA',
-      borderRadius: 5,
+      flexDirection: 'column',
+      width: '95%',
+      height: '90%',
+      backgroundColor: SECONDARY_COLOR,
+      borderRadius: 10,
     },
     image: {
       flex: 1,
       width: undefined,
       height: undefined,
-      resizeMode: 'contain',
+      borderRadius: 10,
+    },
+    close_button: {
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      width: '100%',
+      margin: 20,
+      paddingLeft: 20,
     },
     image_container: {
-      width: 300,
-      height: 600,
+      width: '100%',
+      height: '300%',
     },
   }),
 };
