@@ -93,11 +93,12 @@ app.post('/match', (req, res) => {
     }
 })
 const bodyParser = require('body-parser');
-const urlencodedParser = bodyParser.urlencoded({ extended: false });
+const urlencodedParser = bodyParser.json();
 
 app.post('/sign-up', urlencodedParser, (req, res) => {
     console.log('POST sign up');
     console.log(req.body);
+    console.log(req.body.userId);
     signUpUser(req.body.userId)
         .then((val) => {
             if (val == null) {res.status(404).end()}
