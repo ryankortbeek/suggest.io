@@ -1,3 +1,4 @@
+import e from 'express';
 import express from 'express';
 import { getEvents, getMatchedEvents } from './api';
 import { checkAuth, handleEventResponse, signUpUser } from './db_handler';
@@ -29,9 +30,13 @@ app.get(
     )
       .then(
         (val) => {
-          console.log('No events found for specified parameters...');
-          console.log(val);
-          res.status(200).json(val);
+          if (val == null) {
+            console.log('No events found for specified parameters...');
+            res.status(404).end();
+          } else {
+            console.log(val);
+            res.status(200).json(val);
+          }
         },
         (rej) => {
           console.log(rej);
@@ -54,8 +59,10 @@ app.get('/matched-events/user/:userId', (req, res) => {
         if (val == null) {
           console.log('No matched events for specified user...');
           res.status(404).end();
+        } else {
+          console.log(val);
+          res.status(200).json(val);
         }
-        res.status(200).json(val);
       },
       (rej) => {
         console.log(rej);
@@ -82,8 +89,9 @@ app.post('/match', (req, res) => {
         (val) => {
           if (val == null) {
             res.status(404).end();
+          } else {
+            res.status(200).end();
           }
-          res.status(200).end();
         },
         (rej) => {
           console.log(rej);
@@ -100,8 +108,9 @@ app.post('/match', (req, res) => {
         (val) => {
           if (val == null) {
             res.status(404).end();
+          } else {
+            res.status(200).end();
           }
-          res.status(200).end();
         },
         (rej) => {
           console.log(rej);
@@ -123,8 +132,9 @@ app.post('/sign-up', (req, res) => {
       (val) => {
         if (val == null) {
           res.status(404).end();
+        } else {
+          res.status(200).end();
         }
-        res.status(200).end();
       },
       (rej) => {
         console.log(rej);
