@@ -30,9 +30,9 @@ const YELP_API_KEY = "1ivgB27DrOOF9NbyWW95E1w3eWxw1MD21uhjZaxI1jPXWaEn-m06uNVdvX
  *   })
  *   .catch((e) => {// handle error here})
  */
-export function getEvents(latitude: string, longitude: string, radius: string) {
+export function getEvents(latitude: string, longitude: string, radius: string, userId: string) {
     const res = axios.get(
-        `https://api.yelp.com/v3/events?latitude=${latitude}&longitude=${longitude}&radius=${radius}&limit=50`, 
+        `https://api.yelp.com/v3/events?latitude=${latitude}&longitude=${longitude}&radius=${radius}&limit=50&sort_on=time_start`, 
         {headers: {"Authorization": `Bearer ${YELP_API_KEY}`}}
     )
         .then((response) => {
@@ -41,7 +41,9 @@ export function getEvents(latitude: string, longitude: string, radius: string) {
                     id, name, image_url, description, time_start, time_end, event_site_url, category
                 })
             );
+            console.log(all_events);
             let filtered_events = extractFutureEvents(all_events);
+            //let filtered_events = all_events;
             console.log(`${filtered_events.length} events after extracting current/future events...`);
             if (filtered_events.length == 0) {
                 return null;
@@ -78,7 +80,24 @@ export function getMatchedEvents(userId: string) {
                 // Format and return promise with results
                 const res = axios.all(eventIds.map(url => axios.get(url, {headers: {"Authorization": `Bearer ${YELP_API_KEY}`}})))
                     .then(responseArr => {
-                        const results = responseArr.map(({data})=>({data}));
+
+                        let allEvents: Array<IEvent> = [];
+                        let allData = responseArr.map(({data}) => ({data}));
+                        allData.forEach(event => {
+                            let thisEvent: IEvent = {
+                                id: event.data.id,
+                                name: event.data.name,
+                                description: event.data.description,
+                                image_url: event.data.image_url,
+                                time_start: event.data.time_start,
+                                time_end: event.data.time_end,
+                                event_site_url: event.data.event_site_url,
+                                category: event.data.category
+                            }
+                            allEvents.push(thisEvent);
+                        })
+                        // let results: IEventResponse = {id: new Date().getTime(), events: extractFutureEvents(allEvents)};
+                        let results: IEventResponse = {id: new Date().getTime(), events: allEvents};
                         return results;
                     }, (rej) => {
                         console.log(rej)
@@ -102,13 +121,7 @@ function extractFutureEvents(events: Array<IEvent>) {
         // YYYY-MM-DDTHH:MM:SS+00:00
         let time_ref: string | undefined = (val.time_end != null) ? val.time_end : val.time_start;
         if (time_ref != null) {
-            let event_time: Date = new Date();
-            event_time.setUTCFullYear(+time_ref.substring(0,4));
-            event_time.setUTCMonth(+time_ref.substring(5,7));
-            event_time.setUTCDate(+time_ref.substring(8,10));
-            event_time.setUTCHours(+time_ref.substring(11,13));
-            event_time.setUTCMinutes(+time_ref.substring(14,16));
-            event_time.setUTCSeconds(+time_ref.substring(17,19));
+            let event_time: Date = new Date(time_ref);
             if (event_time >= now) {
                 futureEvents.push(val);
             }
