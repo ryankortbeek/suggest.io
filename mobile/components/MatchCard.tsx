@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { Event } from '../hooks/types';
-import { FullCard } from './FullCard';
+import { baseStyles } from './style';
 
 type Props = {
   cardData: Event;
@@ -15,36 +15,35 @@ export const MatchCard: FC<Props> = ({ cardData, onClickHandler }) => {
       <TouchableWithoutFeedback onPress={onClickHandler}>
         <View style={styles.card}>
           <Image source={cardData.image} style={styles.image} />
-          <Text style={styles.cardsText}>{cardData.name}</Text>
-          <Text style={styles.cardsText}>{cardData.description}</Text>
+          <Text style={styles.title}>{cardData.name}</Text>
+          <Text style={styles.body}>{cardData.description}</Text>
         </View>
       </TouchableWithoutFeedback>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#1073AA',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column',
-  },
-  card: {
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    width: 300,
-    height: 175,
-  },
-  image: {
-    flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'center',
-    width: '100%',
-    height: '100%',
-  },
-  cardsText: {
-    fontSize: 22,
-    color: '#000',
-  },
-});
+const styles = {
+  ...baseStyles,
+  ...StyleSheet.create({
+    container: {
+      backgroundColor: '#1073AA',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column',
+    },
+    card: {
+      backgroundColor: '#fff',
+      flexDirection: 'row',
+      width: 300,
+      height: 175,
+    },
+    image: {
+      flex: 1,
+      resizeMode: 'cover',
+      justifyContent: 'center',
+      width: '100%',
+      height: '100%',
+    },
+  }),
+};

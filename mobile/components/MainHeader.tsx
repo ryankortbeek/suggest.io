@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import SvgUri from 'react-native-svg-uri';
+import { baseStyles } from './style';
 
 type Props = {
   handleMatchButton: () => void;
@@ -11,7 +12,7 @@ export const MainHeader: FC<Props> = ({
   handleMenuButton,
 }) => {
   return (
-    <View style={styles.container}>
+    <View style={styles.basic_container}>
       <TouchableOpacity style={styles.button_left} onPress={handleMenuButton}>
         <SvgUri source={require('../assets/menu_black_24dp.svg')} />
       </TouchableOpacity>
@@ -22,18 +23,14 @@ export const MainHeader: FC<Props> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#1073AA',
-    alignItems: 'center',
-    flexDirection: 'row',
-    height: 100,
-    paddingTop: 50,
-  },
-  button_left: {
-    marginRight: 125,
-  },
-  button_right: {
-    marginLeft: 125,
-  },
-});
+const styles = {
+  ...baseStyles,
+  ...StyleSheet.create({
+    button_left: {
+      marginRight: 125,
+    },
+    button_right: {
+      marginLeft: 125,
+    },
+  }),
+};

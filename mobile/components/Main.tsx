@@ -11,6 +11,7 @@ import { useEvents } from '../hooks/useEvents';
 import { FullCard } from './FullCard';
 import { MainHeader } from './MainHeader';
 import { MainFooter } from './MainFooter';
+import { baseStyles } from './style';
 
 type MainScreenRouteProp = RouteProp<RootStackParamList, 'Main'>;
 
@@ -86,12 +87,12 @@ export const Main: FC<Props> = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.basic_container}>
       <MainHeader
         handleMatchButton={handleMatchButton}
         handleMenuButton={handleMenuButton}
       />
-      <View style={styles.card_deck}>
+      <View style={styles.main_component}>
         {cards ? (
           <SwipeCards
             ref={cardDeckRef}
@@ -119,15 +120,6 @@ export const Main: FC<Props> = ({ route, navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#1073AA',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-  },
-  card_deck: {
-    flex: 2,
-  },
-});
+const styles = {
+  ...baseStyles,
+};
