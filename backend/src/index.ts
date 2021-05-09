@@ -92,8 +92,10 @@ app.post('/match', (req, res) => {
         });
     }
 })
+const bodyParser = require('body-parser');
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-app.post('/sign-up', (req, res) => {
+app.post('/sign-up', urlencodedParser, (req, res) => {
     console.log('POST sign up');
     console.log(req.body);
     signUpUser(req.body.userId)
@@ -119,13 +121,6 @@ app.post('/sign-up', (req, res) => {
 // https.createServer(options, app).listen(3000, () => {
 //     console.log('The application is listening on port 3000!');
 // })
-
-const bodyParser = require('body-parser');
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
 
 app.listen(process.env.PORT, () => {
   console.log('The application is listening on port' + process.env.PORT);
