@@ -92,8 +92,10 @@ app.post('/match', (req, res) => {
         });
     }
 })
+const bodyParser = require('body-parser');
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-app.post('/sign-up', (req, res) => {
+app.post('/sign-up', urlencodedParser, (req, res) => {
     console.log('POST sign up');
     console.log(req.body);
     signUpUser(req.body.userId)
