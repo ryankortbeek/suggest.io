@@ -7,9 +7,9 @@ const app = express();
 const https = require('https');
 const fs = require('fs');
 
-app.use('/', (req, res, next) => {
-    checkAuth(req, res, next)
-})
+// app.use('/', (req, res, next) => {
+//     checkAuth(req, res, next)
+// })
 
 app.get('/', (_, res) => {
     console.log('Welcome to suggest.io!');
@@ -21,6 +21,7 @@ app.get('/events/location/:latitude-:longitude-:radius', (req, res) => {
     console.log(req.params);
     getEvents(req.params['latitude'], req.params['longitude'], req.params['radius'])
         .then((val) => {
+            console.log('No events found for specified parameters...')
             console.log(val);
             res.status(200).json(val);
         }, (rej) => {
@@ -39,7 +40,8 @@ app.get('/matched_events/:userId', (req, res) => {
     getMatchedEvents(req.params['userId'])
         .then((val) => {
             if (val == null) {
-                res.status(404).json(`No matched events for user ID: ${req.params['userId']}`);
+                console.log('No matched events for specified user...');
+                res.status(404).end();
             }
             res.status(200).json(val);
         }, (rej) => {

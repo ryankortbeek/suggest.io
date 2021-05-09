@@ -6,15 +6,13 @@ import { FullCard } from './FullCard';
 
 type Props = {
   cardData: Event;
-  onClickHandler: () => void;
-  //   backCb: () => void;
 };
 
-export const EventCard: FC<Props> = ({ cardData, onClickHandler }) => {
+export const EventCard: FC<Props> = ({ cardData }) => {
   return (
     <View style={styles.card}>
       <ImageBackground source={cardData.image} style={styles.image}>
-        <TouchableWithoutFeedback onLongPress={onClickHandler}>
+        <TouchableWithoutFeedback>
           <Text style={styles.cardsText}>{cardData.name}</Text>
           <Text style={styles.cardsText}>{cardData.description}</Text>
         </TouchableWithoutFeedback>

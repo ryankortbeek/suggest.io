@@ -8,6 +8,7 @@ import { Main } from './components/Main';
 import { Login } from './components/Login';
 import { Matches } from './components/Matches';
 import { AuthProvider } from './provider/AuthProvider';
+import { MainHeader } from './components/MainHeader';
 
 export type RootStackParamList = {
   Main: undefined;
@@ -21,7 +22,12 @@ export default function App() {
   return (
     <NavigationContainer>
       <AuthProvider>
-        <Stack.Navigator initialRouteName='Login'>
+        <Stack.Navigator
+          initialRouteName='Main'
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
           <Stack.Screen name='Main' component={Main} />
           <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='Matches' component={Matches} />

@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
@@ -9,6 +9,8 @@ import { EmptyCard } from './EmptyCard';
 import { Event } from '../hooks/types';
 import { useEvents } from '../hooks/useEvents';
 import { FullCard } from './FullCard';
+import { MainHeader } from './MainHeader';
+import { MainFooter } from './MainFooter';
 
 type MainScreenRouteProp = RouteProp<RootStackParamList, 'Main'>;
 
@@ -28,6 +30,8 @@ export const Main: FC<Props> = ({ route, navigation }) => {
   // );
   const [cards, setCards] = useState(new Array<Event>());
   const [shouldExpand, setExpand] = useState(false);
+  const [isMenuVisible, setMenuVisibility] = useState(false);
+  const cardDeckRef = useRef<any>(null); // TODO: figure out a better way to type check component
   // replace with real remote data fetching
   useEffect(() => {
     setTimeout(() => {
@@ -73,25 +77,41 @@ export const Main: FC<Props> = ({ route, navigation }) => {
     return true;
   };
 
+  const handleMatchButton = () => {
+    navigation.navigate('Matches');
+  };
+
+  const handleMenuButton = () => {
+    setMenuVisibility(true);
+  };
+
   return (
     <View style={styles.container}>
-      {cards ? (
-        <SwipeCards
-          cards={cards}
-          renderCard={(cardData: Event) => (
-            <EventCard
-              cardData={cardData}
-              onClickHandler={() => setExpand(true)}
-            />
-          )}
-          keyExtractor={(cardData: Event) => String(cardData.id)}
-          renderNoMoreCards={() => <EmptyCard text='No more cards...' />}
-          handleYup={handleYup}
-          handleNope={handleNope}
-        />
-      ) : (
-        <EmptyCard text='No more cards...' />
-      )}
+      <MainHeader
+        handleMatchButton={handleMatchButton}
+        handleMenuButton={handleMenuButton}
+      />
+      <View style={styles.card_deck}>
+        {cards ? (
+          <SwipeCards
+            ref={cardDeckRef}
+            cards={cards}
+            renderCard={(cardData: Event) => <EventCard cardData={cardData} />}
+            keyExtractor={(cardData: Event) => String(cardData.id)}
+            renderNoMoreCards={() => <EmptyCard text='No more cards...' />}
+            handleYup={handleYup}
+            handleNope={handleNope}
+          />
+        ) : (
+          <EmptyCard text='No more cards...' />
+        )}
+      </View>
+
+      <MainFooter
+        cardDeckRef={cardDeckRef}
+        handleExpandCard={() => setExpand(true)}
+      />
+
       {shouldExpand && (
         <FullCard cardData={cards[0]} onClickHandler={() => setExpand(false)} />
       )}
@@ -105,5 +125,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'column',
+  },
+  card_deck: {
+    flex: 2,
   },
 });
