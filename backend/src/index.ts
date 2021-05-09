@@ -7,24 +7,24 @@ const app = express();
 const https = require('https');
 const fs = require('fs');
 
-app.use('/', (req, res, next) => {
-    checkAuth(req, res, next)
-})
+// app.use('/', (req, res, next) => {
+//     checkAuth(req, res, next)
+// })
 
 app.get('/', (_, res) => {
     console.log('Welcome to suggest.io!')
     res.json({message: 'Welcome to suggest.io!'});
 })
 
-app.get('/events', (req, res) => {
-    console.log('getting events');
-    getEvents("53.53216861500475", "-113.57363822706881", "40000").then((val) => {
+app.get('/events/location/:latitude-:longitude-:radius', (req, res) => {
+    console.log(`Getting events at...\nlon: ${req.params['latitude']}\nlat: ${req.params['longitude']}\nradius: ${req.params['radius']}`);
+    getEvents(req.params['latitude'], req.params['longitude'], req.params['radius']).then((val) => {
         res.json(val)
     })
 })
 
-app.get('/matched_events/:userId', (req, res) => {
-    console.log(`getting matched events... ${req.params}`);
+app.get('/matched_events/user/:userId', (req, res) => {
+    console.log(`Getting matched events... ${req.params['userId']}`);
     res.json(getMatchedEvents(req.params['userId']));
 })
 

@@ -13,6 +13,19 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
+export function checkAuth(req: Request, res: Response, next: NextFunction) {  
+    if (req.headers.authtoken) {
+        admin.auth().verifyIdToken(req.headers.authtoken)
+            .then(() => {
+            next()
+        }).catch(() => {
+            res.status(403).send('unauthorized');
+        })
+    } else {
+        res.status(403).send('unauthorized');
+    }
+}
+
 export async function handleEventResponse(userId: string, eventId: string, match: boolean) {
     const userData = db.collections('users').doc(userId);
     let data = await userData.get();
@@ -34,15 +47,13 @@ export async function handleEventResponse(userId: string, eventId: string, match
     }
 }
 
-export function checkAuth(req: Request, res: Response, next: NextFunction) {  
-    if (req.headers.authtoken) {
-        admin.auth().verifyIdToken(req.headers.authtoken)
-            .then(() => {
-            next()
-        }).catch(() => {
-            res.status(403).send('unauthorized')
-        })
-    } else {
-        res.status(403).send('unauthorized')
+export async function getMatchedEventIds(userId: string) {
+    const userData = db.collections('users').doc(userId);
+    let data = await userData.get();
+    if (data.exists) {
+        console.log(`Retreived matched event ids:\n${data['matched-events']}\nFor user: ${userId}`);
+        return data['matched-events'];
     }
+    console.log('User does not exist');
+    return null;
 }
