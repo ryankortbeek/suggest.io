@@ -127,20 +127,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'column',
   },
-  buttons: {
-    flexDirection: 'row',
-    marginBottom: 50,
-  },
-  button_left: {
-    marginRight: 50,
-  },
-  button_right: {
-    marginLeft: 50,
-  },
-  button_middle: {
-    marginLeft: 50,
-    marginRight: 50,
-  },
   card_deck: {
     flex: 2,
   },
