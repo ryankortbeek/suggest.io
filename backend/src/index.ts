@@ -1,5 +1,5 @@
 import express from 'express';
-import { nextTick } from 'process';
+import { emitWarning, nextTick } from 'process';
 import {getEvents, getMatchedEvents} from './api';
 import {handleEventResponse, checkAuth} from './db_handler';
 
@@ -26,7 +26,9 @@ app.get('/events', (req, res) => {
 
 app.get('/matched_events/:userId', (req, res) => {
     console.log('getting matched events... ' + req.params);
-    res.json(getMatchedEvents(req.params['userId']));
+    getMatchedEvents("3005").then((val) => {
+        res.json(val);
+    })
 })
 
 app.post('/match', (req, res) => {
