@@ -72,3 +72,12 @@ export async function getMatchedEventIds(userId: string) {
     console.log('User does not exist');
     return null;
 }
+
+export async function signUpUser(userId: string) {
+    const res = await db.collection('users').doc(userId).set({
+        'matched-events': [],
+        'non-matched-events': []
+    });
+    console.log(res);
+    return res;
+}

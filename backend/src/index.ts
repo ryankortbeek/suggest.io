@@ -1,6 +1,6 @@
 import express from 'express';
 import {getEvents, getMatchedEvents} from './api';
-import {checkAuth, handleEventResponse, getMatchedEventIds} from './db_handler';
+import {checkAuth, handleEventResponse, signUpUser} from './db_handler';
 
 // Routing
 const app = express();
@@ -34,6 +34,12 @@ app.post('/match', (req, res) => {
     console.log('POST match');
     console.log(req.body);
     handleEventResponse(req.body.userId, req.body.eventId, req.body.isMatch);
+})
+
+app.post('/sign-up', (req, res) => {
+    console.log('POST sign up');
+    console.log(req.body);
+    signUpUser(req.body.userId).then((val)=>{console.log(val)}, (rej)=>{console.log(rej)}).catch((e)=>{console.log(e)});
 })
 
 // HTTPS stuff
