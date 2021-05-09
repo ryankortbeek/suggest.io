@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
+import {BASE_URL} from './const'
 
-const BASE_URL = 'base_url'; // TODO: update to actual base URL
 const GET_ALL_EVENTS = BASE_URL + '/events';
 const POST_MATCH = BASE_URL + '/match';
 const GET_MATCHED_EVENTS = BASE_URL + '/matched_events';

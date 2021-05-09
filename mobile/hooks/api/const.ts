@@ -1,0 +1,1 @@
+export const BASE_URL = 'base_url'; // TODO: update to actual base URL
