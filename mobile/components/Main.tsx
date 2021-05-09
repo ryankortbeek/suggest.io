@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
@@ -11,6 +11,7 @@ import { useEvents } from '../hooks/useEvents';
 import { FullCard } from './FullCard';
 import { MainHeader } from './MainHeader';
 import { MainFooter } from './MainFooter';
+import { baseStyles } from './style';
 
 type MainScreenRouteProp = RouteProp<RootStackParamList, 'Main'>;
 
@@ -68,11 +69,13 @@ export const Main: FC<Props> = ({ route, navigation }) => {
   }, []);
 
   const handleYup = (card: Event) => {
+    // TODO: uncomment
     // handleSwipe(route.params.userInfo, card.id, true);
     return true; // return false if you wish to cancel the action
   };
 
   const handleNope = (card: Event) => {
+    // TODO: uncomment
     // handleSwipe(route.params.userInfo, card.id, false);
     return true;
   };
@@ -86,12 +89,12 @@ export const Main: FC<Props> = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.basic_container}>
       <MainHeader
         handleMatchButton={handleMatchButton}
         handleMenuButton={handleMenuButton}
       />
-      <View style={styles.card_deck}>
+      <View style={styles.main_component}>
         {cards ? (
           <SwipeCards
             ref={cardDeckRef}
@@ -101,6 +104,8 @@ export const Main: FC<Props> = ({ route, navigation }) => {
             renderNoMoreCards={() => <EmptyCard text='No more cards...' />}
             handleYup={handleYup}
             handleNope={handleNope}
+            yupText={'Yes'}
+            nopeText={'No'}
           />
         ) : (
           <EmptyCard text='No more cards...' />
@@ -119,15 +124,6 @@ export const Main: FC<Props> = ({ route, navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#1073AA',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-  },
-  card_deck: {
-    flex: 2,
-  },
-});
+const styles = {
+  ...baseStyles,
+};

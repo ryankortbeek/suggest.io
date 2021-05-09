@@ -7,6 +7,7 @@ import { Event } from '../hooks/types';
 import { MatchCard } from './MatchCard';
 import { FullCard } from './FullCard';
 import { MatchHeader } from './MatchHeader';
+import { baseStyles } from './style';
 
 type MatchesScreenRouteProp = RouteProp<RootStackParamList, 'Matches'>;
 
@@ -65,9 +66,9 @@ export const Matches: FC<Props> = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.basic_container}>
       <MatchHeader handleBackButton={onClickHandler} />
-      <View style={styles.list}>
+      <View style={styles.main_component}>
         <FlatList<Event>
           keyExtractor={(cardData: Event) => String(cardData.id)}
           data={cards}
@@ -90,15 +91,6 @@ export const Matches: FC<Props> = ({ route, navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#1073AA',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-  },
-  list: {
-    flex: 2,
-  },
-});
+const styles = {
+  ...baseStyles,
+};
