@@ -6,17 +6,15 @@ import { FullCard } from './FullCard';
 
 type Props = {
   cardData: Event;
-  //   shouldExpand: boolean;
+  onClickHandler: () => void;
   //   backCb: () => void;
 };
 
-export const EventCard: FC<Props> = ({ cardData }) => {
-  const [shouldExpand, setExpand] = useState(false);
-
+export const EventCard: FC<Props> = ({ cardData, onClickHandler }) => {
   return (
     <View style={styles.card}>
       <ImageBackground source={cardData.image} style={styles.image}>
-        <TouchableWithoutFeedback onPress={() => setExpand(true)}>
+        <TouchableWithoutFeedback onLongPress={onClickHandler}>
           <Text style={styles.cardsText}>{cardData.name}</Text>
           <Text style={styles.cardsText}>{cardData.description}</Text>
         </TouchableWithoutFeedback>
